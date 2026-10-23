@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "description": "P3/P4/P5 기능 배치별 영구 번호. 번호는 기존 유형에 재할당하지 않음.",
+  "types": [
+    {
+      "number": 1,
+      "P3": "BX",
+      "P4": "Speed-L",
+      "P5": "Speed-M"
+    },
+    {
+      "number": 2,
+      "P3": "BX",
+      "P4": "Speed-M",
+      "P5": "Speed-L"
+    },
+    {
+      "number": 3,
+      "P3": "Speed-L",
+      "P4": "Speed-M",
+      "P5": "BX"
+    }
+  ]
+}
