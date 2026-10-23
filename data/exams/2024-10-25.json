@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "id": "2024-10-25",
+  "date": "2024-10-25",
+  "title": "24년10월25일_PCQ 3급문제",
+  "source": {
+    "filename": "[공개문서]24년10월25일_PCQ 3급문제.pdf",
+    "sha256": "acbf4a79ada60ac2107231559ce7ce3a671c61ff9777ae87dad9fb0b5e7ad208",
+    "pages": 14,
+    "task1Page": 4,
+    "task3Page": 12
+  },
+  "task1": {
+    "runCommand": "Keypad",
+    "frequencyMethods": [
+      "Keypad-1",
+      "Keypad-2"
+    ],
+    "terminalFunctions": {
+      "P3": "BX",
+      "P4": "Speed-L",
+      "P5": "Speed-M"
+    },
+    "speeds": {
+      "0": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 15.0
+      },
+      "1": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 20.0
+      },
+      "2": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "ON"
+        },
+        "hz": 30.0
+      },
+      "3": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "ON"
+        },
+        "hz": 60.0
+      },
+      "bx": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "-",
+          "SS3": "-"
+        },
+        "display": "bX",
+        "source": "table"
+      }
+    },
+    "sourceTableHasBxRow": true,
+    "emergencyInstruction": null,
+    "taskLabel": "회로 배선과 인버터 다단속 제어",
+    "sourceInstruction": "운전그룹 설정: 운전지령 Keypad / 주파수설정방법 Keypad-1 또는 Keypad-2; 디지털 입력 기능 및 다단속 설정은 표 참조"
+  },
+  "task3": {
+    "taskLabel": "절단기제어",
+    "communicationRequired": true,
+    "avoidAccelDecelChanges": true,
+    "inverterParameters": {
+      "runCommand": "Int 485",
+      "frequencyCommand": "Int 485"
+    },
+    "inverterRelatedRequirements": [
+      "4) 인버터의가속/감속시간은따로설정하지마시오.",
+      "7) PLC와인버터간RS-485 통신을수행하시오."
+    ],
+    "operationSteps": [
+      {
+        "number": 1,
+        "text": "전원투입후MCCB를ON하고, PB6을누르면MC가 여자되고자기유지된다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 2,
+        "text": "MC가 여자되면인버터가ON된다. OCR이Trip하면YL2가 점등한다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 3,
+        "text": "다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 4,
+        "text": "기동스위치(PB1)를누르면설비동작램프(YL1)가 점등된다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 5,
+        "text": "물체감지센서(PB2)를누르면, 유도전동기는30Hz로정회전한다.",
+        "frequencies_hz": [
+          30.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 6,
+        "text": "정위치센서(PB3)를누르면, 유도전동기가15㎐로정회전하며,\n톱날전진(RL1)이2초간점등된후소등된다.",
+        "frequencies_hz": [
+          15.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 7,
+        "text": "톱날전진(RL1)이소등될때커팅완료(GL2)와톱날후진(GL1)이점등하고유도전동기는10㎐\n로역회전한다.",
+        "frequencies_hz": [
+          10.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 8,
+        "text": "커팅완료(GL2), 톱날후진(GL1), 유도전동기는3초후에모두OFF된다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 9,
+        "text": "1초후설비동작램프(YL1)가 소등된다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 10,
+        "text": "다시기동스위치(PB1)를누르면회로는반복하여동작한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 11,
+        "text": "유도전동기가동작하는중에비상안전스위치(PB4)를누르면설비동작램프(YL1)가 소등되\n고, 유도전동기가정지한다. 비상램프(RL2)가 2초주기(1초점등, 1초소등)로점멸한다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 12,
+        "text": "비상안전스위치해제(PB5)를두번누르면비상램프가소등하고회로는4)번상태로돌아가\n서다시동작을반복할수있다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      }
+    ]
+  },
+  "extraction": {
+    "status": "auto_extracted",
+    "warnings": [],
+    "task1PageText": "3. 동작사항\n1) 전원투입후MCCB를ON하고, PB6을누르면MC가 여자되고자기유지된다.\n2) MC가 여자되면인버터가ON된다. OCR이Trip하면YL2가 점등한다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n①운전지령: Keypad\n②주파수설정방법: Keypad-1 또는Keypad-2\n(2) 디지털입력(다기능단자대) 설정\n①P3 : 비상정지(BX)\n②P4 : Speed-L\n③P5 : Speed-M\n(3) 다단속설정\n구분 SS1 SS2 SS3 f [Hz]\n0속 OFF OFF OFF 15\n1속 OFF ON OFF 20\n2속 OFF OFF ON 30\n3속 OFF ON ON 60\n비상정지 ON - - bx\n4) SS1, SS2, SS3가 OFF일때인버터LED는주파수15 ㎐를나타낸다.\n5) SS2만ON일때인버터LED는주파수20 ㎐를나타낸다.\n6) SS3만ON일때인버터LED는주파수30 ㎐를나타낸다.\n7) SS2와SS3가 ON일때인버터LED는주파수60 ㎐를나타낸다.\n8) SS1이ON 하면인버터LED는“bx” 코드(비상정지)를나타내며깜빡인다.\n- 4 -",
+    "task3PageText": "자격종목 PLC 제어기술자 3급 과제명 제3과제) 절단기제어\n■제3과제: 절단기제어(시험시간: 제2과제제3과제통합2시간)\n1. 과제목적\n생산된제품을일정한간격으로절단하는절단공정을제어하는PLC 프로그램을작성할수있다.\n2. 요구사항\n1) I/O List와타임차트를참고하여주어진시험시간내에동작사항에맞도록수험자가지참한\nPLC에 프로그래밍하시오.\n2) 과제제출이후에는프로그램을재작업할수없으니, 시험시간내에프로그램의시뮬레이션\n기능을활용하거나사전에전원을인가하여동작을점검하고제대로수행되는지프로그램을\n충분히테스트하시오.\n3) PLC에전원을공급할때오결선또는단자접속불량으로인해단락되지않도록주의하시오.\n4) 인버터의가속/감속시간은따로설정하지마시오.\n5) 물체감지센서, 정위치센서는각각 푸시버튼PB2, PB3으로대체하시오.\n6) PLC 래더도작성시푸시버튼은양변환검출접점을이용하시오(오동작방지).\n7) PLC와인버터간RS-485 통신을수행하시오.\n3. 동작사항\n1) 전원투입후MCCB를ON하고, PB6을누르면MC가 여자되고자기유지된다.\n2) MC가 여자되면인버터가ON된다. OCR이Trip하면YL2가 점등한다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485\n4) 기동스위치(PB1)를누르면설비동작램프(YL1)가 점등된다.\n5) 물체감지센서(PB2)를누르면, 유도전동기는30Hz로정회전한다.\n6) 정위치센서(PB3)를누르면, 유도전동기가15㎐로정회전하며,\n톱날전진(RL1)이2초간점등된후소등된다.\n7) 톱날전진(RL1)이소등될때커팅완료(GL2)와톱날후진(GL1)이점등하고유도전동기는10㎐\n로역회전한다.\n8) 커팅완료(GL2), 톱날후진(GL1), 유도전동기는3초후에모두OFF된다.\n9) 1초후설비동작램프(YL1)가 소등된다.\n10) 다시기동스위치(PB1)를누르면회로는반복하여동작한다.\n11) 유도전동기가동작하는중에비상안전스위치(PB4)를누르면설비동작램프(YL1)가 소등되\n고, 유도전동기가정지한다. 비상램프(RL2)가 2초주기(1초점등, 1초소등)로점멸한다.\n12) 비상안전스위치해제(PB5)를두번누르면비상램프가소등하고회로는4)번상태로돌아가\n서다시동작을반복할수있다.\n- 12 -"
+  }
+}

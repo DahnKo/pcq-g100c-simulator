@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "2024-12-20",
+  "date": "2024-12-20",
+  "title": "24년12월20일_PCQ 3급문제",
+  "source": {
+    "filename": "[공개문서]24년12월20일_PCQ 3급문제.pdf",
+    "sha256": "cfbb17f5b0c22ac9fff96eb64ae05cb690a454d8cd275a1446aa52bd147f5abd",
+    "pages": 12,
+    "task1Page": 3,
+    "task3Page": 10
+  },
+  "task1": {
+    "runCommand": "Keypad",
+    "frequencyMethods": [
+      "Keypad-1",
+      "Keypad-2"
+    ],
+    "terminalFunctions": {
+      "P3": "BX",
+      "P4": "Speed-L",
+      "P5": "Speed-M"
+    },
+    "speeds": {
+      "0": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 3.0
+      },
+      "1": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 20.0
+      },
+      "2": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "ON"
+        },
+        "hz": 30.0
+      },
+      "3": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "ON"
+        },
+        "hz": 40.0
+      },
+      "bx": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "-",
+          "SS3": "-"
+        },
+        "display": "bX",
+        "source": "table"
+      }
+    },
+    "sourceTableHasBxRow": true,
+    "emergencyInstruction": null,
+    "taskLabel": "회로 배선과 인버터 다단속 제어",
+    "sourceInstruction": "운전그룹 설정: 운전지령 Keypad / 주파수설정방법 Keypad-1 또는 Keypad-2; 디지털 입력 기능 및 다단속 설정은 표 참조"
+  },
+  "task3": {
+    "taskLabel": "양품생산",
+    "communicationRequired": true,
+    "avoidAccelDecelChanges": true,
+    "inverterParameters": {
+      "runCommand": "Int 485",
+      "frequencyCommand": "Int 485"
+    },
+    "inverterRelatedRequirements": [
+      "4) 인버터의가속/감속시간은따로설정하지마시오.",
+      "7) PLC와인버터간RS-485 통신을수행하시오."
+    ],
+    "operationSteps": [
+      {
+        "number": 1,
+        "text": "전원투입후MCCB를ON한다. PB6을누르면MC가 여자, 자기유지되며,\n인버터가켜지고PB7로소자할수있다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 2,
+        "text": "OCR이Trip하면YL2가 점등하고, OCR이복귀하면소등한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 3,
+        "text": "다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 4,
+        "text": "시작버튼(PB1)을누르면4초를주기로생산중(YL1)이3초동안점등, 1초동안소등을반복하며,\n유도전동기는20 ㎐로정회전한다.",
+        "frequencies_hz": [
+          20.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 5,
+        "text": "양품센서(PB2)를눌렀다떼는경우\n(1) 양품_수량(GL1)이점등되고1초후소등된다.\n(2) 다시양품센서(PB2)를눌렀다떼어양품_수량(GL1)이총5회점등되면생산_완료(GL2)가\n점등되고, 생산중(YL1)이소등되며, 유도전동기는40㎐로정회전한다.\n(3) 재기동(PB4)을누르면, “4)”과정직전의준비상태로복귀한다. 이후다시시작버튼(PB1)을누르면\n4초를주기로생산중(YL1)이3초동안점등, 1초동안소등을반복하며유도전동기는20㎐로정회전\n한다.\n(4) SS1을ON하면유도전동기는정지한다(비상정지).",
+        "frequencies_hz": [
+          40.0,
+          20.0
+        ],
+        "motor_mentions": true
+      }
+    ]
+  },
+  "extraction": {
+    "status": "auto_extracted",
+    "warnings": [],
+    "task1PageText": "3. 동작사항\n1) 전원투입후MCCB를ON한다. PB6을누르면MC가 여자, 자기유지되며, 인버터가켜지\n고PB7로소자할수있다. OCR이Trip하면YL2가 점등하고, OCR이복귀하면소등한다.\n2) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정　①운전지령: Keypad, ②주파수설정방법: Keypad-1 또는Keypad-2\n(2) 디지털입력(다기능단자대) 설정①P3 : 비상정지(BX), ②P4 : Speed-L, ③P5 : Speed-M\n(3) 다단속설정\n구분 SS1 SS2 SS3 f [Hz]\n0속 OFF OFF OFF 3\n1속 OFF ON OFF 20\n2속 OFF OFF ON 30\n3속 OFF ON ON 40\n비상정지 ON - - bx\n- 3 -",
+    "task3PageText": "자격종목 PLC 제어기술자 3급 과제명 제3과제) PLC 공정제어\n■제3과제: 양품생산(시험시간: 제2과제제3과제통합2시간)\n1. 과제목적\n생산/제조공정에서생산된제품의정보(양품또는불량품)를센서를통해받아이를구분하여조건에\n따라제품을계속생산하거나중단하도록제어할수있는생산공정PLC 프로그램을작성할수있다.\n2. 요구사항\n1) I/O List와타임차트를참고하여주어진시험시간내에동작사항에맞도록수험자가지참한\nPLC에 프로그래밍하시오.\n2) 과제제출이후에는프로그램을재작업할수없으니, 시험시간내에프로그램의시뮬레이션\n기능을활용하거나사전에전원을인가하여동작을점검하고제대로수행되는지프로그램을\n충분히테스트하시오.\n3) PLC에전원을공급할때오결선또는단자접속불량으로인해단락되지않도록주의하시오.\n4) 인버터의가속/감속시간은따로설정하지마시오.\n5) 양품센서, 불량센서는각각 푸시버튼PB2, PB3로대체하시오.\n6) PLC 래더도작성시푸시버튼은타임차트에맞게양변환과음변환검출접점을이용하시오\n7) PLC와인버터간RS-485 통신을수행하시오.\n3. 동작사항\n1) 전원투입후MCCB를ON한다. PB6을누르면MC가 여자, 자기유지되며,\n인버터가켜지고PB7로소자할수있다.\n2) OCR이Trip하면YL2가 점등하고, OCR이복귀하면소등한다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485\n4) 시작버튼(PB1)을누르면4초를주기로생산중(YL1)이3초동안점등, 1초동안소등을반복하며,\n유도전동기는20 ㎐로정회전한다.\n5) 양품센서(PB2)를눌렀다떼는경우\n(1) 양품_수량(GL1)이점등되고1초후소등된다.\n(2) 다시양품센서(PB2)를눌렀다떼어양품_수량(GL1)이총5회점등되면생산_완료(GL2)가\n점등되고, 생산중(YL1)이소등되며, 유도전동기는40㎐로정회전한다.\n(3) 재기동(PB4)을누르면, “4)”과정직전의준비상태로복귀한다. 이후다시시작버튼(PB1)을누르면\n4초를주기로생산중(YL1)이3초동안점등, 1초동안소등을반복하며유도전동기는20㎐로정회전\n한다.\n(4) SS1을ON하면유도전동기는정지한다(비상정지).\n- 10 -"
+  }
+}

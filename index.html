@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G100C · PCQ 3급 인버터 조작 연습 v0.9</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.1 · 기출 48회 수록</span></div>
+  <div class="controls"><span class="controlLabel">과제</span><div class="pillGroup"><button id="task1" class="active" onclick="selectTask(1)">1과제 · 다단속</button><button id="task3" onclick="selectTask(3)">3과제 · 통신</button></div><span class="controlLabel">채점 모드</span><div class="pillGroup"><button id="practiceBtn" class="active" onclick="setMode('practice')">연습</button><button id="examBtn" onclick="setMode('exam')">시험</button></div><button class="btn" onclick="newSession()">처음 상태로</button><button class="btn primary" onclick="grade(true)">완료 · 결과 확인</button></div>
+  <div class="layout">
+    <section class="panel devicePanel"><h2>G100C 조작부 <span class="badgeInfo" id="screenState">운전 그룹 · 코드 탐색</span></h2><div class="minor">버튼 조작 중 선택 자릿수 및 저장 확인 단계가 점멸합니다.</div>
+      <div class="hardwareArea">
+        <div class="drive" aria-label="G100C 인버터 키패드 모의 조작 패널">
+          <div class="keypad">
+            <div class="displayZone">
+              <div class="indicatorColumn leftLights">
+                <div class="ind"><span class="indText">SET</span><span class="led red" id="ledSet"></span></div>
+                <div class="ind"><span class="indText">RUN</span><span class="led green" id="ledRun"></span></div>
+              </div>
+              <div class="lcd" id="lcd" aria-label="인버터 7세그먼트 표시부">0.00</div>
+              <div class="indicatorColumn rightLights">
+                <div class="ind"><span class="led amber" id="ledFwd"></span><span class="indText">FWD</span></div>
+                <div class="ind"><span class="led amber" id="ledRev"></span><span class="indText">REV</span></div>
+              </div>
+            </div>
+            <div class="keypadBottom">
+              <div class="keygrid">
+                <button type="button" class="physical run" onclick="press('run')"><span>RUN</span></button>
+                <button type="button" aria-label="위" class="physical arrow" onclick="press('up')"><span class="chevronKey upChevron" aria-hidden="true"></span></button>
+                <button type="button" class="physical stop" onclick="press('stop')">STOP<small>RESET</small></button>
+                <button type="button" id="modeShiftKey" class="physical" aria-label="MODE SHIFT">MODE<small>SHIFT</small></button>
+                <button type="button" aria-label="아래" class="physical arrow" onclick="press('down')"><span class="chevronKey downChevron" aria-hidden="true"></span></button>
+                <button type="button" class="physical" onclick="press('enter')">ENT</button>
+              </div>
+              <div class="volumeArea" title="내장 볼륨(V0) 다이얼 — 외형 재현(조작 기능 미구현)" aria-label="볼륨 다이얼 이미지, 현재 조작 미지원">
+                <div class="knobArc" aria-hidden="true"></div>
+                <div class="volumeKnob" aria-hidden="true"><div class="volumeKnobCenter"></div><span class="knobPointer"></span></div>
+                <div class="volumeLabels"><span>MIN</span><span>MAX</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ext"><button class="btn primary" onclick="press('esc')">↩ 가상 ESC</button><button class="btn subtle" onclick="press('modeRev')">◀ 이전 그룹으로 이동</button><button class="btn" onclick="powerCycle()" id="powerBtn">전원 OFF</button><div class="hintbox"><b>현재 MODE 이동 방향: <span id="groupDirection">정방향 →</span></b><br>MODE/SHIFT <b>짧게</b>: 현재 방향으로 한 그룹 이동 · <b>1초 이상</b>: 이동 방향 반전 후 한 그룹 이동. 이후의 짧은 누르기도 반전된 방향을 유지합니다.<br>값 편집 중 MODE/SHIFT는 자릿수를 왼쪽으로 이동합니다.<br>MODE/SHIFT + ▼ 등의 복합키는 ESC입니다.<br>가상 '이전 그룹' 버튼은 방향을 변경하지 않는 PC 편의 기능입니다.</div></div>
+      </div>
+      <div class="note" id="lcdNote">기본 운전 주파수 화면입니다. MODE로 그룹을 이동하거나 ▲로 다음 코드를 선택하세요.</div>
+      <div class="minor" style="margin-top:9px;line-height:1.6">표시등: SET=설정 중 점멸, RUN=운전 중, FWD/REV=회전 방향. <b>BX 시 네 표시등 점등</b>은 제공된 실물 사진을 기준으로 재현한 특수 표시입니다.</div><div class="sectionSpacer"></div><h2>다기능 입력 모의 동작</h2><div class="minor" id="terminalHelp">모의 스위치를 누르면 선택 주파수를 LCD와 하단에 즉시 표시합니다. 키패드를 누르면 이전 메뉴로 돌아갑니다.</div><div class="switches" id="switches"></div><div class="readout" id="monitor"></div>
+      <div id="plcDemo" class="taskSheet hidden"><h3>가상 PLC · RS-485 운전 명령 테스트</h3><div class="minor" style="margin-bottom:10px">실제 통신선·XG5000 연결이 아닌 내부 동작 모의 기능입니다.</div><div class="bottom" id="plcButtons"></div></div>
+      <div class="sectionSpacer"></div><h2>조작 기록</h2><div class="log" id="log"></div><p class="footerDisclaimer">이 구현은 PCQ 학습용 독립 웹 시뮬레이터이며 LS ELECTRIC의 공식 소프트웨어가 아닙니다. 실제 하드웨어 펌웨어, 조건부 코드 표시, 가/감속 및 통신 프레임을 완전히 에뮬레이션하지 않습니다.</p>
+    </section>
+    <section class="panel rightPanel"><h2>과제 요구사항 <span id="taskTag" class="version">2026.10.17 기출</span></h2><div id="taskDesc" class="summaryline"></div>
+      <div class="examChooser"><label for="examSelect">기출문제 선택</label><select id="examSelect" onchange="chooseExam(this.value)"><option value="">기출 로딩 중...</option></select><div class="minor" id="examOrigin">시험일을 선택하면 1·3과제 요구사항을 함께 불러옵니다.</div></div>
+      <div id="sourceWarning" class="validationWarning hidden" role="status"></div>
+      <div class="examPaper" id="examPaper" aria-label="시험지 형식 과제 요구사항"></div>
+      <details class="practiceDetails" id="practiceProgress"><summary>설정 진행도 <span class="progressPreview">필요할 때 펼쳐 확인하세요</span></summary>
+        <div class="practiceInside"><div class="practiceNotice">아래는 연습 전용 도움말입니다. 설정 코드·정답 및 현재 달성 여부를 보여줍니다.</div>
+          <div class="requirements" id="requirements"></div><div class="progress"><span id="progBar" style="width:0%"></span></div>
+          <div class="totals"><strong id="progressText">0 / 0 충족</strong><span class="minor">설정을 변경하면 즉시 갱신</span></div>
+        </div>
+      </details>
+      <div class="totals" id="examNotice" style="display:none"><span class="minor">시험 모드: 완료 버튼을 누른 뒤에만 충족 여부를 확인할 수 있습니다.</span></div>
+      <div id="problemEditor" class="practiceOnly"><div class="taskSheet" id="customSheet"><h3>직접 설정 · 1과제 요구사항</h3><p class="minor">문제 선택에서 ‘직접 설정’을 선택한 경우에만 사용합니다.</p><div class="fields">
+        <div class="field"><label for="goalP3">P3</label><select id="goalP3"><option value="5">BX (5)</option><option value="7">Speed-L (7)</option><option value="8">Speed-M (8)</option><option value="9">Speed-H (9)</option><option value="0">None (0)</option></select></div>
+        <div class="field"><label for="goalP4">P4</label><select id="goalP4"><option value="5">BX (5)</option><option value="7">Speed-L (7)</option><option value="8">Speed-M (8)</option><option value="9">Speed-H (9)</option><option value="0">None (0)</option></select></div>
+        <div class="field"><label for="goalP5">P5</label><select id="goalP5"><option value="5">BX (5)</option><option value="7">Speed-L (7)</option><option value="8">Speed-M (8)</option><option value="9">Speed-H (9)</option><option value="0">None (0)</option></select></div>
+        <div class="field"><label for="goalBase">0속 Hz</label><input id="goalBase" type="number" step="0.01" min="0" max="400" value="3"></div>
+        <div class="field"><label for="goalSt1">1속 Hz</label><input id="goalSt1" type="number" step="0.01" min="0" max="400" value="9"></div>
+        <div class="field"><label for="goalSt2">2속 Hz</label><input id="goalSt2" type="number" step="0.01" min="0" max="400" value="15"></div>
+        <div class="field"><label for="goalSt3">3속 Hz</label><input id="goalSt3" type="number" step="0.01" min="0" max="400" value="21"></div>
+      </div><div class="bottom"><button class="btn strong" onclick="applyCustom()">이 요구사항 적용</button></div></div></div>
+      <p class="footerDisclaimer">초기화(dr.93)는 학습을 위한 권장 준비 절차이며, 여기서는 과제 요구사항 자체의 채점 항목으로 넣지 않았습니다. 미구현 파라미터는 탐색용 더미로 표시됩니다.</p>
+    </section>
+  </div>
+</div>
+<div class="toaster" id="toast"></div>
+<div class="modalWrap hidden" id="resultModal"><div class="modal"><div class="resultHead"><h2>설정 결과</h2><button class="btn" onclick="closeResult()">닫기 ✕</button></div><div class="resultScore" id="resultScore"></div><p id="resultDescription"></p><div id="resultItems"></div><div style="margin-top:17px;text-align:right"><button class="btn primary" onclick="closeResult()">확인</button></div></div></div>
+<script src="js/app.js"></script>
+</body></html>

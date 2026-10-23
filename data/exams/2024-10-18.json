@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "id": "2024-10-18",
+  "date": "2024-10-18",
+  "title": "24년10월18일_PCQ 3급문제",
+  "source": {
+    "filename": "[공개문서]24년10월18일_PCQ 3급문제.pdf",
+    "sha256": "9701c5979c3282b64860ab7a7857f5e528ef9675ec09637a93d92c0680dcbd01",
+    "pages": 14,
+    "task1Page": 4,
+    "task3Page": 12
+  },
+  "task1": {
+    "runCommand": "Keypad",
+    "frequencyMethods": [
+      "Keypad-1",
+      "Keypad-2"
+    ],
+    "terminalFunctions": {
+      "P3": "Speed-L",
+      "P4": "Speed-M",
+      "P5": "BX"
+    },
+    "speeds": {
+      "0": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 5.0
+      },
+      "1": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 10.0
+      },
+      "2": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 40.0
+      },
+      "3": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 60.0
+      },
+      "bx": {
+        "switches": {
+          "SS1": "-",
+          "SS2": "-",
+          "SS3": "ON"
+        },
+        "display": "bX",
+        "source": "table"
+      }
+    },
+    "sourceTableHasBxRow": true,
+    "emergencyInstruction": null,
+    "taskLabel": "회로 배선과 인버터 다단속 제어",
+    "sourceInstruction": "운전그룹 설정: 운전지령 Keypad / 주파수설정방법 Keypad-1 또는 Keypad-2; 디지털 입력 기능 및 다단속 설정은 표 참조"
+  },
+  "task3": {
+    "taskLabel": "자동세차기제어",
+    "communicationRequired": true,
+    "avoidAccelDecelChanges": true,
+    "inverterParameters": {
+      "runCommand": "Int 485",
+      "frequencyCommand": "Int 485"
+    },
+    "inverterRelatedRequirements": [
+      "4) 인버터의가속/감속시간은따로설정하지마시오.",
+      "7) PLC와인버터간RS-485 통신을수행하시오."
+    ],
+    "operationSteps": [
+      {
+        "number": 1,
+        "text": "전원투입후MCCB를ON하면, 전원표시등(YL2)이점등한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 2,
+        "text": "PB6을누르면MC가 여자되고자기유지된다. MC가 여자되면인버터가ON된다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 3,
+        "text": "다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 4,
+        "text": "기동스위치(PB1)를누르면4초주기로세차중(YL1)이2초동안점등, 2초동안소등을반복한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 5,
+        "text": "차량진입센서(PB2)를누르면, 유도전동기는40㎐로정회전한다.",
+        "frequencies_hz": [
+          40.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 6,
+        "text": "차량이특정위치에도착, 물 공급 센서(PB3)를 누르면, 물 공급을 위해 펌프 동작\n(GL1)이3초간점등되며GL1이점등하는동안유도전동기는10㎐로정회전한다.",
+        "frequencies_hz": [
+          10.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 7,
+        "text": "차량이특정위치에도착, 세제공급센서(PB4)를누르면, 세제공급을위해세제투입\n(GL2)이1초간점등, 1초간소등을총2회반복한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 8,
+        "text": "차량이특정위치에도착, 물공급센서(PB3)를누르면, 물공급을위해펌프동작(GL1)이\n2초간점등된후소등된다. GL1이점등하는동안유도전동기는10㎐로정회전한다.",
+        "frequencies_hz": [
+          10.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 9,
+        "text": "차량이 특정 위치에 도착, 건조 센서(PB5)를 누르면, 차량 건조를 위해 건조 동작\n(RL1)이1초간점등된후소등되며, 소등됨과동시에세차중(YL1)이소등및유도전동기\n가 정지하며, 세차완료(RL2)가 1초간점등된후소등된다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 10,
+        "text": "다시기동스위치(PB1)을누르면4)~9) 과정이반복된다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 11,
+        "text": "진행중과전류가흐르면, OCR이동작하여전동기는정지한다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      }
+    ]
+  },
+  "extraction": {
+    "status": "auto_extracted",
+    "warnings": [],
+    "task1PageText": "3. 동작사항\n1) 전원투입후MCCB를ON하면, 전원표시등(YL2)이점등한다.\n2) PB6을누르면MC가 여자되고자기유지된다. MC가 여자되면인버터가ON된다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n①운전지령: Keypad\n②주파수설정방법: Keypad-1 또는Keypad-2\n(2) 디지털입력(다기능단자대) 설정\n①P3 : Speed-L\n②P4 : Speed-M\n③P5 : 비상정지(BX)\n(3) 다단속설정\n구분 SS1 SS2 SS3 f [Hz]\n0속 OFF OFF OFF 5\n1속 ON OFF OFF 10\n2속 OFF ON OFF 40\n3속 ON ON OFF 60\n비상정지 - - ON bx\n4) SS1, SS2, SS3가 OFF일때인버터LED는주파수5 ㎐를나타낸다.\n5) SS1만ON일때인버터LED는주파수10 ㎐를나타낸다.\n6) SS2만ON일때인버터LED는주파수40 ㎐를나타낸다.\n7) SS1과SS2가 ON일때인버터LED는주파수60 ㎐를나타낸다.\n8) SS3를ON 하면인버터LED는“bx” 코드(비상정지)를나타내며깜빡인다.\n- 4 -",
+    "task3PageText": "자격종목 PLC 제어기술자 3급 과제명 제3과제) 자동세차기 제어회로\n■제3과제: 자동세차기제어(시험시간: 제2과제제3과제통합2시간)\n1. 과제목적\n일상생활에서쉽게볼수있는자동세차기의PLC 프로그램을작성할수있다.\n2. 요구사항\n1) I/O List와타임차트를참고하여주어진시험시간내에동작사항에맞도록수험자가지참한\nPLC에 프로그래밍하시오.\n2) 과제제출이후에는프로그램을재작업할수없으니, 시험시간내에프로그램의시뮬레이션\n기능을활용하거나사전에전원을인가하여동작을점검하고제대로수행되는지프로그램을\n충분히테스트하시오.\n3) PLC에전원을공급할때오결선또는단자접속불량으로인해단락되지않도록주의하시오.\n4) 인버터의가속/감속시간은따로설정하지마시오.\n5) 차량진입센서, 물공급센서, 세제공급센서, 건조센서는각각 푸시버튼PB2, PB3,\nPB4, PB5로대체하시오.\n6) PLC 래더도작성시푸시버튼은양변환검출접점을이용하시오(오동작방지).\n7) PLC와인버터간RS-485 통신을수행하시오.\n3. 동작사항\n1) 전원투입후MCCB를ON하면, 전원표시등(YL2)이점등한다.\n2) PB6을누르면MC가 여자되고자기유지된다. MC가 여자되면인버터가ON된다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485\n4) 기동스위치(PB1)를누르면4초주기로세차중(YL1)이2초동안점등, 2초동안소등을반복한다.\n5) 차량진입센서(PB2)를누르면, 유도전동기는40㎐로정회전한다.\n6) 차량이특정위치에도착, 물 공급 센서(PB3)를 누르면, 물 공급을 위해 펌프 동작\n(GL1)이3초간점등되며GL1이점등하는동안유도전동기는10㎐로정회전한다.\n7) 차량이특정위치에도착, 세제공급센서(PB4)를누르면, 세제공급을위해세제투입\n(GL2)이1초간점등, 1초간소등을총2회반복한다.\n8) 차량이특정위치에도착, 물공급센서(PB3)를누르면, 물공급을위해펌프동작(GL1)이\n2초간점등된후소등된다. GL1이점등하는동안유도전동기는10㎐로정회전한다.\n9) 차량이 특정 위치에 도착, 건조 센서(PB5)를 누르면, 차량 건조를 위해 건조 동작\n(RL1)이1초간점등된후소등되며, 소등됨과동시에세차중(YL1)이소등및유도전동기\n가 정지하며, 세차완료(RL2)가 1초간점등된후소등된다.\n10) 다시기동스위치(PB1)을누르면4)~9) 과정이반복된다.\n11) 진행중과전류가흐르면, OCR이동작하여전동기는정지한다.\n- 12 -"
+  }
+}

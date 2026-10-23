@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "2024-09-06",
+  "date": "2024-09-06",
+  "title": "24년9월6일_PCQ 3급문제",
+  "source": {
+    "filename": "[공개문서]24년9월6일_PCQ 3급문제.pdf",
+    "sha256": "e4e54c65c62405ee6c35bffe878723f24d2cfe29172cd25a7b3d5a52ba0e69cf",
+    "pages": 14,
+    "task1Page": 4,
+    "task3Page": 11
+  },
+  "task1": {
+    "runCommand": "Keypad",
+    "frequencyMethods": [
+      "Keypad-1",
+      "Keypad-2"
+    ],
+    "terminalFunctions": {
+      "P3": "BX",
+      "P4": "Speed-L",
+      "P5": "Speed-M"
+    },
+    "speeds": {
+      "0": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 10.0
+      },
+      "1": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 30.0
+      },
+      "2": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "ON"
+        },
+        "hz": 45.0
+      },
+      "3": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "ON"
+        },
+        "hz": 60.0
+      },
+      "bx": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "-",
+          "SS3": "-"
+        },
+        "display": "bX",
+        "source": "prose"
+      }
+    },
+    "sourceTableHasBxRow": false,
+    "emergencyInstruction": "8) SS1을ON 하면인버터LED는“bx” 코드를나타내며깜빡인다(비상정지).",
+    "taskLabel": "회로 배선과 인버터 다단속 제어",
+    "sourceInstruction": "운전그룹 설정: 운전지령 Keypad / 주파수설정방법 Keypad-1 또는 Keypad-2; 디지털 입력 기능 및 다단속 설정은 표 참조"
+  },
+  "task3": {
+    "taskLabel": "스마트팜설비제어",
+    "communicationRequired": true,
+    "avoidAccelDecelChanges": true,
+    "inverterParameters": {
+      "runCommand": "Int 485",
+      "frequencyCommand": "Int 485"
+    },
+    "inverterRelatedRequirements": [
+      "4) 인버터의가속/감속시간은따로설정하지마시오.",
+      "7) PLC와인버터간RS-485 통신을수행하시오."
+    ],
+    "operationSteps": [
+      {
+        "number": 1,
+        "text": "전원투입후MCCB를ON하면, 설비대기(YL1)가 점등된다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 2,
+        "text": "PB6을누르면MC가 여자되고자기유지된다. MC가 여자되면\n전원표시등(YL2)이점등되고, 인버터가ON된다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 3,
+        "text": "다음과같이인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 4,
+        "text": "동작스위치(PB1)를눌러스마트팜설비를운전시킨다. 운전을시작하면설비동작(GL1)이점등\n되며, 설비대기(YL1)은소등된다. 또한, 2초를주기로조명동작(GL2)이1초동안점등, 1초동\n안소등을반복한다. 이때물주입펌프용유도전동기가15Hz로정회전한다.",
+        "frequencies_hz": [
+          15.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 5,
+        "text": "고온경고센서(PB2)가 켜지면, 고온/저온경고(RL1)가 점등되고3초를주기로\n조명동작(GL2)이1초동안점등, 2초동안소등을반복한다.\n고온경고센서(PB2)가 꺼지면, 4) 동작으로복귀한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 6,
+        "text": "저온경고센서(PB3)가 켜지면, 고온/저온경고(RL1)이점등되고1초를주기로\n조명동작(GL2)이0.5초동안점등, 0.5초동안소등을반복한다.\n저온경고센서(PB3)가 꺼지면, 4) 동작으로복귀한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      }
+    ]
+  },
+  "extraction": {
+    "status": "auto_extracted",
+    "warnings": [],
+    "task1PageText": "3. 동작사항\n1) 전원투입후MCCB를ON하고, PB6을누르면MC가 여자되고자기유지된다.\n2) MC가 여자되면인버터전원표시등(YL2)이점등되고, 인버터가ON된다.\n3) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정\n①운전지령: Keypad\n②주파수설정방법: Keypad-1 또는Keypad-2\n(2) 디지털입력(다기능단자대) 설정\n①P3 : 비상정지(BX)\n②P4 : Speed-L\n③P5 : Speed-M\n(3) 다단속설정\n구분 SS1 SS2 SS3 f [Hz]\n0속 OFF OFF OFF 10\n1속 OFF ON OFF 30\n2속 OFF OFF ON 45\n3속 OFF ON ON 60\n4) SS1, SS2, SS3이OFF일때인버터LED는주파수10 ㎐를나타낸다.\n5) SS2만ON일때인버터LED는주파수30 ㎐를나타낸다.\n6) SS3만ON일때인버터LED는주파수45 ㎐를나타낸다.\n7) SS2와SS3이ON일때인버터LED는주파수60 ㎐를나타낸다.\n8) SS1을ON 하면인버터LED는“bx” 코드를나타내며깜빡인다(비상정지).\n- 4 -",
+    "task3PageText": "자격종목 PLC 제어기술자 3급 과제명 제3과제) 스마트팜 설비제어\n■제3과제: 스마트팜설비제어(시험시간: 제2과제제3과제통합2시간)\n1. 과제목적\n스마트팜설비에서외부온도, 습도조건에따라센서가동작, 조건에따라조광량및수분공급을\n제어할수있는식물재배설비의PLC 프로그램을작성할수있다.\n2. 요구사항\n1) I/O List와타임차트를참고하여주어진시험시간내에동작사항에맞도록수험자가지참한\nPLC에 프로그래밍하시오.\n2) 과제제출이후에는프로그램을재작업할수없으니, 시험시간내에프로그램의시뮬레이션\n기능을활용하거나사전에전원을인가하여동작을점검하고제대로수행되는지프로그램을\n충분히테스트하시오.\n3) PLC에전원을공급할때오결선또는단자접속불량으로인해단락되지않도록주의하시오.\n4) 인버터의가속/감속시간은따로설정하지마시오.\n5) 고온경고센서, 저온경고센서, 건조경고센서, 습윤경고센서는\n각각 푸시버튼PB2, PB3, PB4, PB5로대체하시오.\n6) PLC 래더도작성시동작스위치(PB1)는양변환검출접점을이용하시오(오동작방지).\n7) PLC와인버터간RS-485 통신을수행하시오.\n3. 동작사항\n1) 전원투입후MCCB를ON하면, 설비대기(YL1)가 점등된다.\n2) PB6을누르면MC가 여자되고자기유지된다. MC가 여자되면\n전원표시등(YL2)이점등되고, 인버터가ON된다.\n3) 다음과같이인버터의파라미터를설정한다.\n(1) 운전그룹설정\n- 운전지령: Int 485\n- 주파수설정방법: Int 485\n4) 동작스위치(PB1)를눌러스마트팜설비를운전시킨다. 운전을시작하면설비동작(GL1)이점등\n되며, 설비대기(YL1)은소등된다. 또한, 2초를주기로조명동작(GL2)이1초동안점등, 1초동\n안소등을반복한다. 이때물주입펌프용유도전동기가15Hz로정회전한다.\n5) 고온경고센서(PB2)가 켜지면, 고온/저온경고(RL1)가 점등되고3초를주기로\n조명동작(GL2)이1초동안점등, 2초동안소등을반복한다.\n고온경고센서(PB2)가 꺼지면, 4) 동작으로복귀한다.\n6) 저온경고센서(PB3)가 켜지면, 고온/저온경고(RL1)이점등되고1초를주기로\n조명동작(GL2)이0.5초동안점등, 0.5초동안소등을반복한다.\n저온경고센서(PB3)가 꺼지면, 4) 동작으로복귀한다.\n- 11 -"
+  }
+}

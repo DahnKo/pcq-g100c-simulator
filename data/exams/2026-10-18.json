@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-10-18",
+  "date": "2026-10-18",
+  "title": "26년10월18일_PCQ 3급문제",
+  "source": {
+    "filename": "[공개문서]26년10월18일_PCQ 3급문제_정기3회.pdf",
+    "sha256": "58a67cfbb3e06c1d63adee23077187ba587a9fa402a65af29733a7f2aa9ac212",
+    "pages": 11,
+    "task1Page": 3,
+    "task3Page": 9
+  },
+  "task1": {
+    "runCommand": "Keypad",
+    "frequencyMethods": [
+      "Keypad-1",
+      "Keypad-2"
+    ],
+    "terminalFunctions": {
+      "P3": "BX",
+      "P4": "Speed-L",
+      "P5": "Speed-M"
+    },
+    "speeds": {
+      "0": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "OFF"
+        },
+        "hz": 3.0
+      },
+      "1": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "OFF"
+        },
+        "hz": 9.0
+      },
+      "2": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "OFF",
+          "SS3": "ON"
+        },
+        "hz": 15.0
+      },
+      "3": {
+        "switches": {
+          "SS1": "OFF",
+          "SS2": "ON",
+          "SS3": "ON"
+        },
+        "hz": 21.0
+      },
+      "bx": {
+        "switches": {
+          "SS1": "ON",
+          "SS2": "-",
+          "SS3": "-"
+        },
+        "display": "bX",
+        "source": "table"
+      }
+    },
+    "sourceTableHasBxRow": true,
+    "emergencyInstruction": null,
+    "taskLabel": "회로 배선과 인버터 다단속 제어",
+    "sourceInstruction": "운전그룹 설정: 운전지령 Keypad / 주파수설정방법 Keypad-1 또는 Keypad-2; 디지털 입력 기능 및 다단속 설정은 표 참조"
+  },
+  "task3": {
+    "taskLabel": "러닝머신제어",
+    "communicationRequired": true,
+    "avoidAccelDecelChanges": true,
+    "inverterParameters": {
+      "runCommand": "Int 485",
+      "frequencyCommand": "Int 485"
+    },
+    "inverterRelatedRequirements": [
+      "4) 인버터의가속/감속시간은따로설정하지마시오.",
+      "7) PLC와인버터간RS-485 통신을수행하시오."
+    ],
+    "operationSteps": [
+      {
+        "number": 1,
+        "text": "다음과같이 인버터의파라미터를설정한다.\n가. 운전그룹설정/ 운전지령: Int 485 / 주파수설정방법: Int 485",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      },
+      {
+        "number": 2,
+        "text": "전원을투입하면정지램프(YL1)가 점등한다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 3,
+        "text": "걷기버튼(PB1)을눌렀다떼면, 걷기상태램프(RL1)가 점등, 정지램프(YL1)는소등,\n유도전동기는7Hz로정회전한다.",
+        "frequencies_hz": [
+          7.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 4,
+        "text": "달리기버튼(PB2)을눌렀다떼면, 걷기상태램프(RL1)가 소등, 달리기상태램프(GL1)가 점등,\n유도전동기가20Hz로정회전한다.\n이때걷기상태램프(RL1)와달리기상태램프(GL1)는동시에점등하지않는다.",
+        "frequencies_hz": [
+          20.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 5,
+        "text": "경사도증가버튼(PB3)을누르는동안경사도(고) 램프(GL2)가 1초를주기(0.5초ON/ 0.5초OFF)로점멸한다.\n이때유도전동기는7㎐로정회전한다.",
+        "frequencies_hz": [
+          7.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 6,
+        "text": "경사도감소버튼(PB4)을누르는동안경사도(저) 램프(RL2)가 2초를주기(1초ON/ 1초OFF)로점멸한다.\n이때유도전동기는7㎐로정회전한다.",
+        "frequencies_hz": [
+          7.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 7,
+        "text": "걷기버튼(PB1)과달리기버튼(PB2)은후입력우선동작되어서로상태변화를할수있다.\n걷거나달리는중경사도증가버튼(PB3)· 경사도감소버튼(PB4)을누르면유도전동기는7㎐로정회전한다.",
+        "frequencies_hz": [
+          7.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 8,
+        "text": "동작중정지버튼(PB5)을누르면정지램프(YL1)를제외한모든램프는소등한다.\n정지램프(YL1)는3초동안점멸(0.5초ON, 0.5초OFF)하고, 이시간동안유도전동기는3㎐로역회전한다.\n3초후정지램프(YL1)가 계속점등하고, 유도전동기는정지한다.",
+        "frequencies_hz": [
+          3.0
+        ],
+        "motor_mentions": true
+      },
+      {
+        "number": 9,
+        "text": "정지상태에서2) ~ 8)까지동작은반복할수있다.",
+        "frequencies_hz": [],
+        "motor_mentions": false
+      },
+      {
+        "number": 10,
+        "text": "진행중과전류가흐르면, OCR이동작하여전동기는정지한다.",
+        "frequencies_hz": [],
+        "motor_mentions": true
+      }
+    ]
+  },
+  "extraction": {
+    "status": "auto_extracted",
+    "warnings": [],
+    "task1PageText": "3. 동작사항\n1) 전원투입후MCCB를ON한다. PB6을누르면MC가 여자, 자기유지, 인버터가켜지고\nPB7로소자할수있다. OCR이Trip하면YL2가 점등하고, OCR이복귀하면소등한다.\n2) 다음과같이 인버터의파라미터를설정한다.\n(1) 운전그룹설정　①운전지령: Keypad, ②주파수설정방법: Keypad-1 또는Keypad-2\n(2) 디지털입력(다기능단자대) 설정①P3 : 비상정지(BX), ②P4 : Speed-L, ③P5 : Speed-M\n(3) 다단속설정\n구분 SS1 SS2 SS3 f [Hz]\n0속 OFF OFF OFF 3\n1속 OFF ON OFF 9\n2속 OFF OFF ON 15\n3속 OFF ON ON 21\n비상정지 ON - - bx\n- 3 -",
+    "task3PageText": "자격종목 PLC 제어기술자 3급 과제명 제3과제) PLC 공정제어\n■제3과제: 러닝머신제어(시험시간: 제2과제제3과제통합2시간)\n1. 과제목적\n일상생활에서자주볼수있는러닝머신의PLC 프로그램을작성할수있다. 특정버튼을누르면\n지정된속도와각도로러닝머신이움직인다. 또한, 정지스위치를누르면러닝머신은정지한다.\n2. 요구사항\n1) I/O List와타임차트를참고하여주어진시험시간내에동작사항에맞도록수험자가지참한PLC에 프로\n그래밍하시오.\n2) 과제제출이후에는프로그램을재작업할수없으니, 시험시간내에프로그램의시뮬레이션기능을활용\n하거나사전에전원을인가하여동작을점검하고제대로수행되는지프로그램을충분히테스트하시오.\n3) PLC에전원을공급할때오결선또는단자접속불량으로인해단락되지않도록주의하시오.\n4) 인버터의가속/감속시간은따로설정하지마시오.\n5) 걷기버튼, 달리기버튼, 경사도증가버튼, 경사도감소버튼, 정지버튼은\n각각 푸시버튼PB1, PB2, PB3, PB4, PB5로대체하시오.\n6) PLC 래더도작성시푸시버튼은타임차트에맞게양변환과음변환검출접점을이용하시오(오동작방지)\n7) PLC와인버터간RS-485 통신을수행하시오.\n3. 동작사항\n1) 다음과같이 인버터의파라미터를설정한다.\n가. 운전그룹설정/ 운전지령: Int 485 / 주파수설정방법: Int 485\n2) 전원을투입하면정지램프(YL1)가 점등한다.\n3) 걷기버튼(PB1)을눌렀다떼면, 걷기상태램프(RL1)가 점등, 정지램프(YL1)는소등,\n유도전동기는7Hz로정회전한다.\n4) 달리기버튼(PB2)을눌렀다떼면, 걷기상태램프(RL1)가 소등, 달리기상태램프(GL1)가 점등,\n유도전동기가20Hz로정회전한다.\n이때걷기상태램프(RL1)와달리기상태램프(GL1)는동시에점등하지않는다.\n5) 경사도증가버튼(PB3)을누르는동안경사도(고) 램프(GL2)가 1초를주기(0.5초ON/ 0.5초OFF)로점멸한다.\n이때유도전동기는7㎐로정회전한다.\n6) 경사도감소버튼(PB4)을누르는동안경사도(저) 램프(RL2)가 2초를주기(1초ON/ 1초OFF)로점멸한다.\n이때유도전동기는7㎐로정회전한다.\n7) 걷기버튼(PB1)과달리기버튼(PB2)은후입력우선동작되어서로상태변화를할수있다.\n걷거나달리는중경사도증가버튼(PB3)· 경사도감소버튼(PB4)을누르면유도전동기는7㎐로정회전한다.\n8) 동작중정지버튼(PB5)을누르면정지램프(YL1)를제외한모든램프는소등한다.\n정지램프(YL1)는3초동안점멸(0.5초ON, 0.5초OFF)하고, 이시간동안유도전동기는3㎐로역회전한다.\n3초후정지램프(YL1)가 계속점등하고, 유도전동기는정지한다.\n9) 정지상태에서2) ~ 8)까지동작은반복할수있다.\n10) 진행중과전류가흐르면, OCR이동작하여전동기는정지한다.\n- 9 -"
+  }
+}
