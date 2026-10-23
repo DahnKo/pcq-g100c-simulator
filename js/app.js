@@ -70,11 +70,35 @@ function press(action){monitorOverlay=false;if(Date.now()<comboIgnoreUntil&&['mo
  if(action==='enter'){if(group!=='op'&&code===0){stage='jump';editKey=`${group}.00`;inputType='jump';edit=String(JUMP_DEFAULT[group]??1);cursor=lastDigitIndex(edit);render();return}beginEdit(storedKey());return}}
 }
 function powerCycle(){monitorOverlay=false;powered=!powered;if(!powered){run=false;plcFreq=0;resetEditor();record('전원 OFF');qs('powerBtn').textContent='전원 ON'}else{group='op';opIdx=0;code=0;record('전원 ON · 설정값 유지');qs('powerBtn').textContent='전원 OFF'}render()}
-function newSession(){initParams();qs('powerBtn').textContent='전원 OFF';toast('새 세션: 출하값으로 시작합니다.');render()}
+// Reset ONLY after the user has acknowledged loss of the current settings.
+function resetForNewAttempt(){
+  initParams();
+  qs('powerBtn').textContent='전원 OFF';
+  qs('practiceProgress').open=false;
+  closeResult();
+}
+function newSession(){
+  if(!window.confirm('처음 상태로 되돌릴까요?\n현재 인버터 설정과 조작 기록이 사라집니다.\n선택한 기출문제와 채점 모드는 유지됩니다.'))return;
+  resetForNewAttempt();render();toast('인버터 설정을 초기화했습니다.');
+}
 function reqs(){if(task===3)return[{label:'운전지령 · Int 485',detail:'drv = 3',test:()=>Number(valueFor('drv'))===3},{label:'주파수 설정 · Int 485',detail:'Frq = 6',test:()=>Number(valueFor('frq'))===6}];let rs=[{label:'운전지령 · Keypad',detail:'drv = 0',test:()=>Number(valueFor('drv'))===0},{label:'주파수 설정 · Keypad-1 또는 2',detail:'Frq = 0 또는 1',test:()=>[0,1].includes(Number(valueFor('frq')))}];for(let [k,label] of [['base','0속'],['st1','1속'],['st2','2속'],['st3','3속']]){if(profile[k]===null||profile[k]===''||profile[k]===undefined)continue;let target=Number(profile[k]);rs.push({label:`${label} 주파수`,detail:`${k==='base'?'기본 운전 주파수':k.toUpperCase()} = ${target.toFixed(2)} Hz`,test:()=>Math.abs(Number(valueFor(k))-target)<.001})}
  for(let n of [3,4,5]){let target=Number(profile.terms['P'+n]);rs.push({label:`P${n} 입력 기능`,detail:`In.${64+n} = ${target} (${FN[target]??'미지정'})`,test:()=>Number(valueFor(`In.${64+n}`))===target})}return rs}
 function selectTask(t){monitorOverlay=false;task=t;qs('task1').classList.toggle('active',t===1);qs('task3').classList.toggle('active',t===3);qs('plcDemo').classList.toggle('hidden',t!==3);qs('customSheet').classList.toggle('hidden',mode!=='practice'||selectedExamId!=='custom'||t!==1);qs('terminalHelp').textContent=t===1?'모의 스위치를 누르면 선택 주파수를 LCD와 하단에 즉시 표시합니다. 키패드를 누르면 이전 메뉴로 돌아갑니다.':'3과제의 RS-485 모의 명령을 누르면 LCD에 주파수가 즉시 표시됩니다.';render()}
-function setMode(m){mode=m;qs('practiceBtn').classList.toggle('active',m==='practice');qs('examBtn').classList.toggle('active',m==='exam');render();toast(m==='practice'?'연습 모드 · 실시간 체크 표시':'시험 모드 · 완료 전 정오답 비공개')}
+function setMode(m){
+  if(m===mode)return;
+  if(mode==='practice'&&m==='exam'){
+    if(!window.confirm('시험 모드를 시작할까요?\n현재 연습 중인 인버터 설정과 조작 기록이 초기화됩니다.\n선택한 기출문제는 유지됩니다.'))return;
+    resetForNewAttempt();
+  }else if(mode==='exam'&&m==='practice'){
+    if(!window.confirm('시험을 종료하고 연습 모드로 돌아갈까요?\n인버터 설정값은 초기화하지 않고 그대로 유지됩니다.'))return;
+    closeResult();
+  }
+  mode=m;
+  qs('practiceBtn').classList.toggle('active',m==='practice');
+  qs('examBtn').classList.toggle('active',m==='exam');
+  if(m==='exam')qs('practiceProgress').open=false;
+  render();toast(m==='practice'?'연습 모드 · 설정값 유지':'시험 모드 · 설정 초기화 완료');
+}
 function loadPreset(type){if(mode==='exam'){toast('연습 모드에서 먼저 문제를 선택하세요.');return}profile=structuredClone(PRESETS[type]);if(type==='exam'){fillCustom(profile)}render();toast(profile.name+' 요구사항 적용')}
 function useCustom(){if(mode==='exam'){toast('연습 모드에서 먼저 문제를 설정하세요.');return}if(task===3){toast('사용자 정의 단자배치는 1과제에서 이용하세요.');return}document.querySelector('#customSheet').scrollIntoView({behavior:'smooth',block:'nearest'});toast('P3/P4/P5 및 주파수를 변경한 뒤 아래 적용 버튼을 누르세요.')}
 function fillCustom(p){for(let i of [3,4,5])qs('goalP'+i).value=p.terms['P'+i];for(const [id,k] of [['goalBase','base'],['goalSt1','st1'],['goalSt2','st2'],['goalSt3','st3']])qs(id).value=p[k]??''}
@@ -124,20 +148,38 @@ function profileFromExam(e){
    terms:{P3:EXAM_FEATURE_CODES[t.P3],P4:EXAM_FEATURE_CODES[t.P4],P5:EXAM_FEATURE_CODES[t.P5]},examId:e.id};
 }
 function fillExamSelect(){
- qs('examSelect').innerHTML=EXAMS.map(e=>`<option value="${escapeHTML(e.id)}">${escapeHTML(e.title)}</option>`).join('')+'<option value="custom">직접 설정</option>';
+ qs('examSelect').innerHTML=EXAMS.map(e=>{
+  const type=Number(e.terminalType);
+  const stars=Number.isInteger(type)&&type>0?'*'.repeat(type):'';
+  return `<option value="${escapeHTML(e.id)}">${escapeHTML(e.title)}${stars}</option>`;
+ }).join('')+'<option value="custom">직접 설정</option>';
 }
 function chooseExam(id,quiet=false){
- if(id==='custom'){
-   if(mode==='exam'){qs('examSelect').value=selectedExamId;toast('직접 설정은 연습 모드에서 변경할 수 있습니다.');return;}
-   if(selectedExamId!=='custom')fillCustom(profile);
-   selectedExamId='custom';profile.name='직접 설정 문제';profile.examId=null;
-   render();if(!quiet)toast('직접 설정 영역에서 값을 변경하고 적용하세요.');return;
- }
- const e=EXAM_BY_ID[id];if(!e)return;
- selectedExamId=id;lastRealExamId=id;profile=profileFromExam(e);
- qs('examSelect').value=id;
- // Change problem specification, not the inverter's current state.
- render();if(!quiet)toast(`${e.title} 문제를 불러왔습니다. 인버터 설정값은 유지됩니다.`);
+  const dropdown=qs('examSelect');
+  // This handler is also called by HTML select onchange, which has already
+  // modified the displayed value before we show the confirmation dialog.
+  if(id===selectedExamId){dropdown.value=selectedExamId;return;}
+  if(id==='custom'&&mode==='exam'){
+    dropdown.value=selectedExamId;
+    toast('직접 설정은 연습 모드에서 변경할 수 있습니다.');return;
+  }
+  if(id!=='custom'&&!EXAM_BY_ID[id]){dropdown.value=selectedExamId;return;}
+  if(!quiet&&selectedExamId){
+    const okay=window.confirm('다른 문제로 전환할까요?\n현재 인버터 설정과 조작 기록이 초기화됩니다.\n이 작업은 취소할 수 없습니다.');
+    if(!okay){dropdown.value=selectedExamId;return;}
+  }
+  if(id==='custom'){
+    if(selectedExamId!=='custom')fillCustom(profile);
+    selectedExamId='custom';profile={...profile,name:'직접 설정 문제',examId:null};
+  }else{
+    const e=EXAM_BY_ID[id];
+    selectedExamId=id;lastRealExamId=id;profile=profileFromExam(e);
+  }
+  dropdown.value=id;
+  // Quiet boot has a separate initParams() call; subsequent changes reset here.
+  if(!quiet)resetForNewAttempt();
+  render();
+  if(!quiet)toast(id==='custom'?'직접 설정 모드로 전환했습니다.':'새 기출문제로 변경했습니다. 인버터는 출하 초기 상태입니다.');
 }
 async function bootExams(){
  try{

@@ -5,6 +5,7 @@
     "title": "26년10월18일_PCQ 3급문제",
     "path": "exams/2026-10-18.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -13,6 +14,7 @@
     "title": "26년10월17일_PCQ 3급문제",
     "path": "exams/2026-10-17.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -21,6 +23,7 @@
     "title": "26년10월3일_PCQ 3급문제",
     "path": "exams/2026-10-03.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -29,6 +32,7 @@
     "title": "26년9월30일_PCQ 3급문제",
     "path": "exams/2026-09-30.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -37,6 +41,7 @@
     "title": "26년8월23일_PCQ 3급문제",
     "path": "exams/2026-08-23.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -45,6 +50,7 @@
     "title": "26년7월12일_PCQ 3급문제",
     "path": "exams/2026-07-12.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -53,6 +59,7 @@
     "title": "26년7월11일_PCQ 3급문제",
     "path": "exams/2026-07-11.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -61,6 +68,7 @@
     "title": "26년6월21일_PCQ 3급문제",
     "path": "exams/2026-06-21.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -69,6 +77,7 @@
     "title": "26년5월31일_PCQ 3급문제",
     "path": "exams/2026-05-31.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -77,6 +86,7 @@
     "title": "26년5월23일_PCQ 3급문제",
     "path": "exams/2026-05-23.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -85,6 +95,7 @@
     "title": "26년4월26일_PCQ 3급문제",
     "path": "exams/2026-04-26.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -93,6 +104,7 @@
     "title": "26년4월25일_PCQ 3급문제",
     "path": "exams/2026-04-25.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -101,6 +113,7 @@
     "title": "26년4월19일_PCQ 3급문제",
     "path": "exams/2026-04-19.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -109,6 +122,7 @@
     "title": "26년4월18일_PCQ 3급문제",
     "path": "exams/2026-04-18.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -117,6 +131,7 @@
     "title": "25년12월27일_PCQ 3급문제",
     "path": "exams/2025-12-27.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -125,6 +140,7 @@
     "title": "25년12월19일_PCQ 3급문제",
     "path": "exams/2025-12-19.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -133,6 +149,7 @@
     "title": "25년12월16일_PCQ 3급문제",
     "path": "exams/2025-12-16.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -141,6 +158,7 @@
     "title": "25년12월13일_PCQ 3급문제",
     "path": "exams/2025-12-13.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -149,6 +167,7 @@
     "title": "25년11월20일_PCQ 3급문제",
     "path": "exams/2025-11-20.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -157,6 +176,7 @@
     "title": "25년11월15일_PCQ 3급문제",
     "path": "exams/2025-11-15.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -165,6 +185,7 @@
     "title": "25년10월19일_PCQ 3급문제",
     "path": "exams/2025-10-19.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -173,6 +194,7 @@
     "title": "25년10월18일_PCQ 3급문제",
     "path": "exams/2025-10-18.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -181,6 +203,7 @@
     "title": "25년8월31일_PCQ 3급문제",
     "path": "exams/2025-08-31.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -189,6 +212,7 @@
     "title": "25년7월13일_PCQ 3급문제",
     "path": "exams/2025-07-13.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -197,6 +221,7 @@
     "title": "25년7월12일_PCQ 3급문제",
     "path": "exams/2025-07-12.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -205,6 +230,7 @@
     "title": "25년6월18일_PCQ 3급문제",
     "path": "exams/2025-06-18.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -213,6 +239,7 @@
     "title": "25년5월25일_PCQ 3급문제",
     "path": "exams/2025-05-25.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -221,6 +248,7 @@
     "title": "25년4월27일_PCQ 3급문제",
     "path": "exams/2025-04-27.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -229,6 +257,7 @@
     "title": "25년4월26일_PCQ 3급문제",
     "path": "exams/2025-04-26.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -237,6 +266,7 @@
     "title": "25년4월25일_PCQ 3급문제",
     "path": "exams/2025-04-25.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -245,6 +275,7 @@
     "title": "25년4월5일_PCQ 3급문제",
     "path": "exams/2025-04-05.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -253,6 +284,7 @@
     "title": "25년1월4일_PCQ 3급문제",
     "path": "exams/2025-01-04.json",
     "task3Title": "러닝머신제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -261,6 +293,7 @@
     "title": "24년12월20일_PCQ 3급문제",
     "path": "exams/2024-12-20.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -269,6 +302,7 @@
     "title": "24년12월18일_PCQ 3급문제",
     "path": "exams/2024-12-18.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -277,6 +311,7 @@
     "title": "24년12월12일_PCQ 3급문제",
     "path": "exams/2024-12-12.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -285,6 +320,7 @@
     "title": "24년12월7일_PCQ 3급문제",
     "path": "exams/2024-12-07.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -293,6 +329,7 @@
     "title": "24년11월23일_PCQ 3급문제",
     "path": "exams/2024-11-23.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -301,6 +338,7 @@
     "title": "24년11월14일_PCQ 3급문제",
     "path": "exams/2024-11-14.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 2,
     "validated": false
   },
   {
@@ -309,6 +347,7 @@
     "title": "24년11월9일_PCQ 3급문제",
     "path": "exams/2024-11-09.json",
     "task3Title": "절단기제어",
+    "terminalType": 3,
     "validated": true
   },
   {
@@ -317,6 +356,7 @@
     "title": "24년11월8일_PCQ 3급문제",
     "path": "exams/2024-11-08.json",
     "task3Title": "양품생산",
+    "terminalType": 3,
     "validated": true
   },
   {
@@ -325,6 +365,7 @@
     "title": "24년11월2일_PCQ 3급문제",
     "path": "exams/2024-11-02.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -333,6 +374,7 @@
     "title": "24년11월1일_PCQ 3급문제",
     "path": "exams/2024-11-01.json",
     "task3Title": "양품생산",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -341,6 +383,7 @@
     "title": "24년10월25일_PCQ 3급문제",
     "path": "exams/2024-10-25.json",
     "task3Title": "절단기제어",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -349,6 +392,7 @@
     "title": "24년10월18일_PCQ 3급문제",
     "path": "exams/2024-10-18.json",
     "task3Title": "자동세차기제어",
+    "terminalType": 3,
     "validated": true
   },
   {
@@ -357,6 +401,7 @@
     "title": "24년9월29일_PCQ 3급문제",
     "path": "exams/2024-09-29.json",
     "task3Title": "PLC 생산공정",
+    "terminalType": 1,
     "validated": false
   },
   {
@@ -365,6 +410,7 @@
     "title": "24년9월27일_PCQ 3급문제",
     "path": "exams/2024-09-27.json",
     "task3Title": "PLC 생산공정",
+    "terminalType": 1,
     "validated": true
   },
   {
@@ -373,6 +419,7 @@
     "title": "24년9월13일_PCQ 3급문제",
     "path": "exams/2024-09-13.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 2,
     "validated": true
   },
   {
@@ -381,6 +428,7 @@
     "title": "24년9월6일_PCQ 3급문제",
     "path": "exams/2024-09-06.json",
     "task3Title": "스마트팜설비제어",
+    "terminalType": 1,
     "validated": true
   }
 ]

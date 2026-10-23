@@ -2,12 +2,12 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>G100C · PCQ 3급 인버터 조작 연습 v0.9</title>
+<title>G100C · PCQ 3급 인버터 조작 연습 v1.2</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="app">
-  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.1 · 기출 48회 수록</span></div>
+  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.2 · 기출 48회 수록</span></div>
   <div class="controls"><span class="controlLabel">과제</span><div class="pillGroup"><button id="task1" class="active" onclick="selectTask(1)">1과제 · 다단속</button><button id="task3" onclick="selectTask(3)">3과제 · 통신</button></div><span class="controlLabel">채점 모드</span><div class="pillGroup"><button id="practiceBtn" class="active" onclick="setMode('practice')">연습</button><button id="examBtn" onclick="setMode('exam')">시험</button></div><button class="btn" onclick="newSession()">처음 상태로</button><button class="btn primary" onclick="grade(true)">완료 · 결과 확인</button></div>
   <div class="layout">
     <section class="panel devicePanel"><h2>G100C 조작부 <span class="badgeInfo" id="screenState">운전 그룹 · 코드 탐색</span></h2><div class="minor">버튼 조작 중 선택 자릿수 및 저장 확인 단계가 점멸합니다.</div>
@@ -50,7 +50,7 @@
       <div class="sectionSpacer"></div><h2>조작 기록</h2><div class="log" id="log"></div><p class="footerDisclaimer">이 구현은 PCQ 학습용 독립 웹 시뮬레이터이며 LS ELECTRIC의 공식 소프트웨어가 아닙니다. 실제 하드웨어 펌웨어, 조건부 코드 표시, 가/감속 및 통신 프레임을 완전히 에뮬레이션하지 않습니다.</p>
     </section>
     <section class="panel rightPanel"><h2>과제 요구사항 <span id="taskTag" class="version">2026.10.17 기출</span></h2><div id="taskDesc" class="summaryline"></div>
-      <div class="examChooser"><label for="examSelect">기출문제 선택</label><select id="examSelect" onchange="chooseExam(this.value)"><option value="">기출 로딩 중...</option></select><div class="minor" id="examOrigin">시험일을 선택하면 1·3과제 요구사항을 함께 불러옵니다.</div></div>
+      <div class="examChooser"><label for="examSelect">기출문제 선택</label><select id="examSelect" onchange="chooseExam(this.value)"><option value="">기출 로딩 중...</option></select><div class="minor" id="examOrigin">시험일을 선택하면 1·3과제 요구사항을 함께 불러옵니다. * 표시는 P3·P4·P5 배치 유형입니다.</div></div>
       <div id="sourceWarning" class="validationWarning hidden" role="status"></div>
       <div class="examPaper" id="examPaper" aria-label="시험지 형식 과제 요구사항"></div>
       <details class="practiceDetails" id="practiceProgress"><summary>설정 진행도 <span class="progressPreview">필요할 때 펼쳐 확인하세요</span></summary>
