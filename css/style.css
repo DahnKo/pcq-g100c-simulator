@@ -222,3 +222,34 @@
   .ext-actions .btn{min-width:0;width:100%;margin:0}
   .ext .hintbox{width:100%}
 }
+
+/* v1.4 — A안: 기존 최상단 제목 오른쪽 여백에 들어가는 초소형 스톱워치. */
+.heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:12px;row-gap:3px}
+.headingText{grid-column:1;min-width:0}
+.headingRight{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:flex-end;gap:9px;flex:0 0 auto}
+.headingSubtitle{grid-column:1 / -1;margin:2px 0 0!important}
+.examStopwatch{display:flex;align-items:center;gap:8px;white-space:nowrap;
+  padding:7px 10px;border-radius:10px;border:1px solid #b4cfe5;background:#f1f8ff;
+  color:#264868;min-width:137px;font-variant-numeric:tabular-nums}
+.stopwatchMark{font-size:17px;line-height:1}
+.stopwatchText{display:flex;flex-direction:column;gap:1px;align-items:flex-start}
+.stopwatchText strong{font:800 16px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:0.1px}
+.stopwatchText small{font-size:10px;color:#587a97;font-weight:650}
+.examStopwatch.idle{opacity:.45;filter:grayscale(1)}
+.examStopwatch.waiting{background:#f1f8ff;border-color:#a9cae4}
+.examStopwatch.running{background:#eaf6ff;border-color:#77abd8}
+.examStopwatch.finished{background:#eef7f3;border-color:#85bda1}
+.examStopwatch.finished .stopwatchText small{color:#39775d}
+.resultElapsed{font-size:15px!important;color:#245e90!important;font-weight:800;
+  background:#f0f7fc;border:1px solid #d3e4f3;border-radius:10px;padding:9px 12px}
+@media(max-width:900px){.headingVersion{display:none}}
+@media(max-width:560px){
+  .heading{column-gap:6px}
+  .heading h1{font-size:clamp(16px,4vw,20px);line-height:1.24}
+  .heading p{font-size:11px;line-height:1.4}
+  .heading .eyebrow{font-size:10px;letter-spacing:.5px}
+  .examStopwatch{min-width:107px;padding:6px 7px;gap:5px;border-radius:8px}
+  .stopwatchMark{font-size:14px}
+  .stopwatchText strong{font-size:13px}
+  .stopwatchText small{font-size:9px}
+}
