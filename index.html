@@ -2,12 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>G100C · PCQ 3급 인버터 조작 연습 v1.3</title>
+<title>G100C · PCQ 3급 인버터 조작 연습 v1.4</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="app">
-  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.3 · 기출 48회 수록</span></div>
+  <div class="heading">
+    <div class="headingText"><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1></div>
+    <div class="headingRight"><span class="version headingVersion">v1.4 · 기출 48회 수록</span>
+      <div id="examStopwatch" class="examStopwatch idle" role="timer" aria-label="시험 스톱워치" aria-live="off">
+        <span class="stopwatchMark" aria-hidden="true">◷</span>
+        <span class="stopwatchText"><strong id="stopwatchTime">00:00:00</strong><small id="stopwatchStatus">연습 · 비활성</small></span>
+      </div>
+    </div>
+    <p class="headingSubtitle">실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p>
+  </div>
   <div class="controls"><span class="controlLabel">과제</span><div class="pillGroup"><button id="task1" class="active" onclick="selectTask(1)">1과제 · 다단속</button><button id="task3" onclick="selectTask(3)">3과제 · 통신</button></div><span class="controlLabel">채점 모드</span><div class="pillGroup"><button id="practiceBtn" class="active" onclick="setMode('practice')">연습</button><button id="examBtn" onclick="setMode('exam')">시험</button></div><button class="btn" onclick="newSession()">처음 상태로</button><button class="btn primary" onclick="grade(true)">완료 · 결과 확인</button></div>
   <div class="layout">
     <section class="panel devicePanel"><h2>G100C 조작부 <span class="badgeInfo" id="screenState">운전 그룹 · 코드 탐색</span></h2><div class="minor">버튼 조작 중 선택 자릿수 및 저장 확인 단계가 점멸합니다.</div>
@@ -74,6 +83,6 @@
   </div>
 </div>
 <div class="toaster" id="toast"></div>
-<div class="modalWrap hidden" id="resultModal"><div class="modal"><div class="resultHead"><h2>설정 결과</h2><button class="btn" onclick="closeResult()">닫기 ✕</button></div><div class="resultScore" id="resultScore"></div><p id="resultDescription"></p><div id="resultItems"></div><div style="margin-top:17px;text-align:right"><button class="btn primary" onclick="closeResult()">확인</button></div></div></div>
+<div class="modalWrap hidden" id="resultModal"><div class="modal"><div class="resultHead"><h2>설정 결과</h2><button class="btn" onclick="closeResult()">닫기 ✕</button></div><div class="resultScore" id="resultScore"></div><p id="resultDescription"></p><p id="resultElapsed" class="resultElapsed hidden"></p><div id="resultItems"></div><div style="margin-top:17px;text-align:right"><button class="btn primary" onclick="closeResult()">확인</button></div></div></div>
 <script src="js/app.js"></script>
 </body></html>

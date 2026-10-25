@@ -13,6 +13,23 @@ const PRESETS={exam:{name:'2026.10.17 기출',base:3,st1:9,st2:15,st3:21,terms:{
 let task=1,mode='practice',profile=structuredClone(PRESETS.exam),params={},powered=true,run=false,dir=1,groupDirection=1,plcFreq=0,terminal={P3:false,P4:false,P5:false},stage='browse',group='op',opIdx=0,code=0,edit='',cursor=0,editKey='',inputType='',dummy=false,initialized=false,history=[],toastTimer=0,monitorOverlay=false;
 // Work exists only after user interaction; refresh/leave confirmation is browser-native.
 // Chrome/Edge deliberately ignore custom beforeunload text and display their own confirmation buttons.
+// v1.4 — The exam stopwatch measures from the FIRST physical or keyboard keypad
+// interaction until the first grading action. Use a monotonic clock and never
+// start it on entering exam mode or on simulated terminal/PLC toggles.
+const sw={state:'idle',elapsedMs:0,startedAt:0};
+function stopwatchElapsed(){return sw.elapsedMs+(sw.state==='running'?Math.max(0,performance.now()-sw.startedAt):0)}
+function stopwatchFormat(ms){const seconds=Math.floor(Math.max(0,ms)/1000);return [Math.floor(seconds/3600),Math.floor(seconds/60)%60,seconds%60].map(x=>String(x).padStart(2,'0')).join(':')}
+function showStopwatch(){
+ const el=qs('examStopwatch');if(!el)return;
+ el.classList.remove('idle','waiting','running','finished');el.classList.add(sw.state);
+ qs('stopwatchTime').textContent=stopwatchFormat(stopwatchElapsed());
+ qs('stopwatchStatus').textContent=sw.state==='idle'?'연습 · 비활성':sw.state==='waiting'?'첫 키 입력 대기':sw.state==='running'?'시험 · 측정 중':'시험 · 측정 완료';
+}
+function resetStopwatch(){sw.elapsedMs=0;sw.startedAt=0;sw.state=mode==='exam'?'waiting':'idle';showStopwatch()}
+function startStopwatch(){if(mode==='exam'&&sw.state==='waiting'){sw.startedAt=performance.now();sw.state='running';showStopwatch()}}
+function finishStopwatch(){if(mode==='exam'&&sw.state==='running'){sw.elapsedMs=stopwatchElapsed();sw.startedAt=0;sw.state='finished';showStopwatch()}else if(mode==='exam'&&sw.state==='waiting'){sw.state='finished';showStopwatch()}}
+// Visible updates do not influence elapsed time. This also survives background-tab throttling.
+setInterval(()=>{if(sw.state==='running')showStopwatch()},250);
 let hasUnsavedWork=false;
 function markUnsavedWork(){hasUnsavedWork=true}
 window.addEventListener('beforeunload',event=>{
@@ -66,7 +83,7 @@ function commitFirst(){let k=editKey,v=getEditingValue();
  let other=duplicateOwner(k,v);if(other){record(`${k}: ${v} (${FN[v]}) 중복 · ${other}에서 사용 중 (OL)`,true);toast(`OL 중복 설정: ${other}에서 ${FN[v]} 사용 중`);resetEditor();render();return}
  stage='confirm';render()}
 let comboIgnoreUntil=0;
-function press(action){monitorOverlay=false;if(Date.now()<comboIgnoreUntil&&['mode','up','down'].includes(action))return;if(!powered&&action!=='power'){toast('전원이 꺼져 있습니다.');return}
+function press(action){startStopwatch();monitorOverlay=false;if(Date.now()<comboIgnoreUntil&&['mode','up','down'].includes(action))return;if(!powered&&action!=='power'){toast('전원이 꺼져 있습니다.');return}
  markUnsavedWork();
  if(action==='esc'){if(stage==='browse'){group='op';opIdx=0;code=0}else resetEditor();render();return}
  if(action==='run'){if(stage!=='browse'){toast('파라미터 설정 화면입니다.');return}if(Number(valueFor('drv'))!==0){toast(mode==='exam'?'현재 운전 지령 설정에서는 RUN 키로 운전할 수 없습니다.':'drv=0 (Keypad)일 때 RUN 키로 운전할 수 있습니다.');return}run=true;dir=1;monitorOverlay=true;record('RUN 키 · 정회전 지령');render();return}
@@ -86,6 +103,7 @@ function resetForNewAttempt(){
   qs('powerBtn').textContent='전원 OFF';
   qs('practiceProgress').open=false;
   closeResult();
+  resetStopwatch();
 }
 function newSession(){
   if(!window.confirm('처음 상태로 되돌릴까요?\n현재 인버터 설정과 조작 기록이 사라집니다.\n선택한 기출문제와 채점 모드는 유지됩니다.'))return;
@@ -104,6 +122,7 @@ function setMode(m){
     closeResult();
   }
   mode=m;
+  resetStopwatch();
   markUnsavedWork();
   qs('practiceBtn').classList.toggle('active',m==='practice');
   qs('examBtn').classList.toggle('active',m==='exam');
@@ -116,7 +135,7 @@ function fillCustom(p){for(let i of [3,4,5])qs('goalP'+i).value=p.terms['P'+i];f
 function applyCustom(){if(mode==='exam'){toast('시험모드에서는 문제를 수정할 수 없습니다.');return}let terms={};for(let i of [3,4,5])terms['P'+i]=Number(qs('goalP'+i).value);let vals=Object.values(terms).filter(x=>x!==0);if(new Set(vals).size!==vals.length){toast('서로 다른 단자에 같은 기능을 동시에 요구할 수 없습니다.');return}
  let freqs={};for(const [id,key] of [['goalBase','base'],['goalSt1','st1'],['goalSt2','st2'],['goalSt3','st3']]){let v=qs(id).value.trim();if(v===''&&key==='base'){freqs[key]=null;continue}let x=Number(v);if(v===''||!Number.isFinite(x)||x<0||x>400){toast('주파수는 0~400 Hz 범위에서 입력하세요. 0속만 빈칸 허용.');return}freqs[key]=x}
  markUnsavedWork();profile={name:'직접 설정 문제',...freqs,terms};selectedExamId='custom';qs('examSelect').value='custom';selectTask(1);render();toast('사용자 지정 요구사항 적용 완료')}
-function grade(show){let rs=reqs(),done=rs.filter(x=>x.test());if(!show)return;qs('resultScore').textContent=done.length+' / '+rs.length+' 항목';qs('resultDescription').textContent=`${task}과제 · ${profile.name} · ${done.length===rs.length?'모든 설정 요구사항을 충족했습니다.':'미완료 항목을 확인하고 다시 설정하세요.'}`;qs('resultItems').innerHTML=rs.map(r=>`<div class="resultItem"><span class="${r.test()?'ok':'ng'}">${r.test()?'✓':'✕'}</span><div><strong>${escapeHTML(r.label)}</strong>${mode==='practice'?`<div class="minor">${escapeHTML(r.detail)}</div>`:''}</div></div>`).join('');qs('resultModal').classList.remove('hidden')}
+function grade(show){let rs=reqs(),done=rs.filter(x=>x.test());if(!show)return;finishStopwatch();const elapsedLabel=qs('resultElapsed');elapsedLabel.classList.toggle('hidden',mode!=='exam');elapsedLabel.textContent=mode==='exam'?'소요 시간: '+stopwatchFormat(stopwatchElapsed()):'';qs('resultScore').textContent=done.length+' / '+rs.length+' 항목';qs('resultDescription').textContent=`${task}과제 · ${profile.name} · ${done.length===rs.length?'모든 설정 요구사항을 충족했습니다.':'미완료 항목을 확인하고 다시 설정하세요.'}`;qs('resultItems').innerHTML=rs.map(r=>`<div class="resultItem"><span class="${r.test()?'ok':'ng'}">${r.test()?'✓':'✕'}</span><div><strong>${escapeHTML(r.label)}</strong>${mode==='practice'?`<div class="minor">${escapeHTML(r.detail)}</div>`:''}</div></div>`).join('');qs('resultModal').classList.remove('hidden')}
 function closeResult(){qs('resultModal').classList.add('hidden')}
 function toggleTerm(p){markUnsavedWork();terminal[p]=!terminal[p];monitorOverlay=powered;record(`${p} 접점 ${terminal[p]?'ON':'OFF'}`);render()}
 function plcCommand(f,d){if(task!==3)return;if(Number(valueFor('drv'))!==3||Number(valueFor('frq'))!==6){toast(mode==='exam'?'현재 설정에서는 통신 운전 명령을 실행할 수 없습니다.':'통신 운전을 위해 drv=3, Frq=6을 설정해야 합니다.');return}markUnsavedWork();plcFreq=f;dir=d||1;run=f>0;monitorOverlay=true;record(`가상 PLC 통신 · ${f>0?(d===-1?'역회전':'정회전')+' '+f+'Hz':'STOP'}`);render()}
@@ -345,6 +364,10 @@ function render(){let display='0.00',cursorBlink=-1,allBlink=false,k=storedKey()
    lamp.setAttribute('title',`${name}: ${on?'ON':'OFF'}${name==='Set'&&!bxLights&&on?' (점멸)':''}`);
  }
  renderReq();renderSwitches()}
+// Pointer down triggers timer immediately, including MODE long-press and combo ESC.
+for(const button of document.querySelectorAll('.physical')){
+  button.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button===0)startStopwatch()});
+}
 const heldKeys=new Set();
 for(const [index,key] of [[3,'mode'],[1,'up'],[4,'down']]){
   const btn=document.querySelectorAll('.physical')[index];
@@ -387,7 +410,7 @@ window.addEventListener('keydown',e=>{
   if(!keyboardCanControl())return;
   if(e.key.toLowerCase()==='m'){
     e.preventDefault();if(keyboardHeld||e.repeat)return;
-    keyboardHeld=true;keyboardLong=false;
+    startStopwatch();keyboardHeld=true;keyboardLong=false;
     keyHoldTimer=setTimeout(()=>{if(!keyboardHeld)return;keyboardLong=true;press(longModeAction())},1000);
     return;
   }
@@ -402,4 +425,5 @@ window.addEventListener('keyup',e=>{
 window.addEventListener('blur',()=>{clearTimeout(keyHoldTimer);keyboardHeld=false;clearPointerMode()});
 document.querySelectorAll('#problemEditor input, #problemEditor select').forEach(field=>field.addEventListener('input',markUnsavedWork));
 qs('resultModal').addEventListener('click',e=>{if(e.target.id==='resultModal')closeResult()});
+resetStopwatch();
 bootExams();
