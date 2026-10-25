@@ -4,9 +4,7 @@ LS ELECTRIC G100C의 키패드 조작 연습을 위한 **비공식 학습 프로
 
 ## 실행하기
 
-- **GitHub Pages:** 저장소의 `Settings → Pages`에서 `Deploy from a branch`, `main`, `/ (root)`를 선택합니다. 공개 주소는 `https://<계정명>.github.io/<저장소명>/` 형태입니다.
-- **오프라인 실행:** `offline/G100C_PCQ_시뮬레이터_v12_오프라인.html` 파일을 Chrome/Edge에서 엽니다. JSON·CSS·JS가 단일 파일에 포함되어 있어 인터넷이 없어도 실행됩니다.
-- `index.html`은 웹 서버에서 `data/exams-all.json`을 불러옵니다. `file://`로 바로 열 때 일부 브라우저에서는 `fetch`가 제한됩니다.
+**url:** https://dahnko.github.io/pcq-g100c-simulator/
 
 ## 프로젝트 구성
 
@@ -58,7 +56,8 @@ offline/                    만들어진 단일 HTML 파일
 - 원본 PDF 48개와 사용설명서는 이 저장소에 포함하지 않았습니다. 공개 문제지의 재배포 여부는 권리자 정책·이용 허락을 별도로 확인하세요. JSON에 수록된 동작사항 문구 등도 공개 범위를 검토하세요.
 - 이 프로젝트는 LS ELECTRIC의 공식 제작물이 아닙니다.
 
-## v1.2: 단자 배치 유형 및 초기화 확인
+## 버전 별 변경사항
+### v1.2: 단자 배치 유형 및 초기화 확인
 
 - 드롭다운의 끝 `*`, `**`, `***`는 각각 단자배치 유형 1/2/3이며 주파수나 3과제 유형은 반영하지 않습니다.
 - 유형1: P3 BX / P4 Speed-L / P5 Speed-M (43회)
@@ -67,3 +66,12 @@ offline/                    만들어진 단일 HTML 파일
 - 새 단자 배치가 들어오면 `python scripts/rebuild_data.py`가 `data/terminal-types.json`에 다음 번호를 추가합니다. 기존 번호는 유지됩니다.
 - `js/app.js`에서 `fillExamSelect`(별), `chooseExam`(문제 변경 확인 및 초기화), `setMode`(연습/시험 전환), `newSession`/`resetForNewAttempt`(초기화)를 구현합니다.
 - 이전 버전 오프라인 HTML은 역사적 산출물로 남아 있지만, 배포된 사이트의 진입점은 항상 루트 `index.html`입니다.
+
+### v1.3: 새로고침 보호 및 보조 버튼 정리
+
+- 작업 중 새로고침·탭 닫기·사이트 이탈 시 브라우저 기본 확인창을 표시합니다. 첫 실행 직후에는 확인창을 표시하지 않습니다.
+- 새로고침 확인창은 **브라우저가 문구 및 버튼 이름을 결정**하므로, `진행 중인 작업이 사라집니다` 등의 사용자 지정 문구를 브라우저 창에 강제로 표시할 수 없습니다. 취소하면 기존 입력·화면이 유지됩니다.
+- 시험 변경 확인창에서 `이 작업은 취소할 수 없습니다` 문구를 삭제했습니다.
+- `◀ 이전 그룹으로 이동` 가상 버튼을 제거하고 보조 버튼은 `가상 ESC`, `전원 ON/OFF` 두 개로 축약했습니다.
+- `Ctrl+R` / `Cmd+R`이 키보드 단축키의 `R=RUN`으로 가로채지지 않도록 수정했습니다.
+- 코드 위치: `js/app.js`의 `beforeunload`, `press()`, `chooseExam()`, `setMode()`, `keydown` 처리; `index.html`의 `.ext` 조작부; `css/style.css`의 `.ext-actions`.
