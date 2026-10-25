@@ -211,3 +211,14 @@
 .examPaper .task3Details summary{cursor:pointer;color:#335777;font-size:12px;font-weight:700}
 .examPaper .task3Details[open] summary{margin-bottom:7px}
 @media(max-width:560px){.examChooser{padding:9px}}
+
+/* v1.3 — PC auxiliary keys: two actions, compact and consistent on mobile. */
+.ext{width:205px;min-width:180px}
+.ext-actions{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.ext-actions .btn{width:100%;margin:0}
+@media(max-width:560px){
+  .ext{width:100%;min-width:0}
+  .ext-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin:0}
+  .ext-actions .btn{min-width:0;width:100%;margin:0}
+  .ext .hintbox{width:100%}
+}

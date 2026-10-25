@@ -11,6 +11,15 @@ const DEFAULTS={base:0,acc:5,dec:10,drv:1,frq:0,st1:10,st2:20,st3:30,drc:0,'In.6
 const JUMP_DEFAULT={dr:9,bA:20,Ad:20,Cn:4,In:65,OU:30,CM:20,AP:1,Pr:5,M2:4,US:1,UF:1};
 const PRESETS={exam:{name:'2026.10.17 기출',base:3,st1:9,st2:15,st3:21,terms:{P3:5,P4:7,P5:8}},photo:{name:'사진 설정 예시',base:null,st1:30,st2:45,st3:60,terms:{P3:5,P4:7,P5:8}}};
 let task=1,mode='practice',profile=structuredClone(PRESETS.exam),params={},powered=true,run=false,dir=1,groupDirection=1,plcFreq=0,terminal={P3:false,P4:false,P5:false},stage='browse',group='op',opIdx=0,code=0,edit='',cursor=0,editKey='',inputType='',dummy=false,initialized=false,history=[],toastTimer=0,monitorOverlay=false;
+// Work exists only after user interaction; refresh/leave confirmation is browser-native.
+// Chrome/Edge deliberately ignore custom beforeunload text and display their own confirmation buttons.
+let hasUnsavedWork=false;
+function markUnsavedWork(){hasUnsavedWork=true}
+window.addEventListener('beforeunload',event=>{
+  if(!hasUnsavedWork)return;
+  event.preventDefault();
+  event.returnValue=''; // Legacy fallback required by some browsers; text cannot be customized.
+});
 const qs=x=>document.getElementById(x);
 function codeKey(){return group==='op'?OPS[opIdx]:`${group}.${String(code).padStart(2,'0')}`}
 function storedKey(){return group==='op'?OPS[opIdx]:`${group}.${String(code).padStart(2,'0')}`}
@@ -21,7 +30,7 @@ function descOf(k){let v=valueFor(k);if(k==='drv')return ['Keypad','Fx/Rx-1','Fx
 function codeDisplay(){if(group==='op'){let k=OPS[opIdx];return k==='base'?Number(valueFor('base')).toFixed(2):OPVIEW[k]}return `${group}.${String(code).padStart(2,' ')}`}
 function codeList(){return CATALOG[group]||[0]}
 function resetEditor(){stage='browse';edit='';cursor=0;editKey='';dummy=false}
-function initParams(){monitorOverlay=false;params={...DEFAULTS};initialized=false;run=false;dir=1;groupDirection=1;plcFreq=0;terminal={P3:false,P4:false,P5:false};group='op';opIdx=0;code=0;resetEditor();powered=true;history=[];record('인버터 공장 출하값으로 세션 시작 (dr.93 수행 이력과는 별개)');}
+function initParams(){hasUnsavedWork=false;monitorOverlay=false;params={...DEFAULTS};initialized=false;run=false;dir=1;groupDirection=1;plcFreq=0;terminal={P3:false,P4:false,P5:false};group='op';opIdx=0;code=0;resetEditor();powered=true;history=[];record('인버터 공장 출하값으로 세션 시작 (dr.93 수행 이력과는 별개)');}
 function record(t,warn=false){history.unshift({t,warn});history=history.slice(0,30);qs('log').innerHTML=history.map(x=>`<div class="${x.warn?'warn':''}">${escapeHTML(x.t)}</div>`).join('')}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function toast(t){let x=qs('toast');x.textContent=t;x.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>x.classList.remove('show'),2600)}
@@ -58,18 +67,19 @@ function commitFirst(){let k=editKey,v=getEditingValue();
  stage='confirm';render()}
 let comboIgnoreUntil=0;
 function press(action){monitorOverlay=false;if(Date.now()<comboIgnoreUntil&&['mode','up','down'].includes(action))return;if(!powered&&action!=='power'){toast('전원이 꺼져 있습니다.');return}
+ markUnsavedWork();
  if(action==='esc'){if(stage==='browse'){group='op';opIdx=0;code=0}else resetEditor();render();return}
  if(action==='run'){if(stage!=='browse'){toast('파라미터 설정 화면입니다.');return}if(Number(valueFor('drv'))!==0){toast(mode==='exam'?'현재 운전 지령 설정에서는 RUN 키로 운전할 수 없습니다.':'drv=0 (Keypad)일 때 RUN 키로 운전할 수 있습니다.');return}run=true;dir=1;monitorOverlay=true;record('RUN 키 · 정회전 지령');render();return}
  if(action==='stop'){run=false;plcFreq=0;monitorOverlay=true;record('STOP / RESET 키');render();return}
  if(stage==='dummy'){if(action==='enter'||action==='mode')resetEditor();render();return}
  if(stage==='confirm'){if(action==='enter'){applyParam(editKey,getEditingValue())}else{record(`${editKey} 값 입력 취소`);resetEditor()}render();return}
- if(stage==='edit'||stage==='jump'){if(action==='up'||action==='down'){adjustDigit(action==='up'?1:-1);return}if(action==='mode'||action==='modeRev'){moveCursor();render();return}if(action==='enter'){
+ if(stage==='edit'||stage==='jump'){if(action==='up'||action==='down'){adjustDigit(action==='up'?1:-1);return}if(action==='mode'){moveCursor();render();return}if(action==='enter'){
  if(stage==='jump'){let v=Number(edit);let cs=codeList();if(cs.includes(v)){code=v;record(`점프 코드 → ${group}.${v}`)}else{toast('선택한 코드가 목록에 없습니다.');record(`점프 코드 ${v} · 코드 없음`,true)}resetEditor();render();return}commitFirst();return}return}
- if(stage==='browse'){if(action==='mode'||action==='modeRev'||action==='modeToggle'){if(action==='modeToggle'){groupDirection*=-1;record('MODE/SHIFT 1초 이상 · '+(groupDirection===1?'정방향':'역방향')+'으로 전환')}let i=G.indexOf(group);let step=action==='modeRev'?-1:groupDirection;group=G[(i+step+G.length)%G.length];if(group==='op')opIdx=0;else code=0;render();return}
+ if(stage==='browse'){if(action==='mode'||action==='modeToggle'){if(action==='modeToggle'){groupDirection*=-1;record('MODE/SHIFT 1초 이상 · '+(groupDirection===1?'정방향':'역방향')+'으로 전환')}let i=G.indexOf(group);let step=groupDirection;group=G[(i+step+G.length)%G.length];if(group==='op')opIdx=0;else code=0;render();return}
  if(action==='up'||action==='down'){let d=action==='up'?1:-1;if(group==='op')opIdx=(opIdx+d+OPS.length)%OPS.length;else{let l=codeList();let pos=l.indexOf(code);code=l[(pos+d+l.length)%l.length]}render();return}
  if(action==='enter'){if(group!=='op'&&code===0){stage='jump';editKey=`${group}.00`;inputType='jump';edit=String(JUMP_DEFAULT[group]??1);cursor=lastDigitIndex(edit);render();return}beginEdit(storedKey());return}}
 }
-function powerCycle(){monitorOverlay=false;powered=!powered;if(!powered){run=false;plcFreq=0;resetEditor();record('전원 OFF');qs('powerBtn').textContent='전원 ON'}else{group='op';opIdx=0;code=0;record('전원 ON · 설정값 유지');qs('powerBtn').textContent='전원 OFF'}render()}
+function powerCycle(){markUnsavedWork();monitorOverlay=false;powered=!powered;if(!powered){run=false;plcFreq=0;resetEditor();record('전원 OFF');qs('powerBtn').textContent='전원 ON'}else{group='op';opIdx=0;code=0;record('전원 ON · 설정값 유지');qs('powerBtn').textContent='전원 OFF'}render()}
 // Reset ONLY after the user has acknowledged loss of the current settings.
 function resetForNewAttempt(){
   initParams();
@@ -83,7 +93,7 @@ function newSession(){
 }
 function reqs(){if(task===3)return[{label:'운전지령 · Int 485',detail:'drv = 3',test:()=>Number(valueFor('drv'))===3},{label:'주파수 설정 · Int 485',detail:'Frq = 6',test:()=>Number(valueFor('frq'))===6}];let rs=[{label:'운전지령 · Keypad',detail:'drv = 0',test:()=>Number(valueFor('drv'))===0},{label:'주파수 설정 · Keypad-1 또는 2',detail:'Frq = 0 또는 1',test:()=>[0,1].includes(Number(valueFor('frq')))}];for(let [k,label] of [['base','0속'],['st1','1속'],['st2','2속'],['st3','3속']]){if(profile[k]===null||profile[k]===''||profile[k]===undefined)continue;let target=Number(profile[k]);rs.push({label:`${label} 주파수`,detail:`${k==='base'?'기본 운전 주파수':k.toUpperCase()} = ${target.toFixed(2)} Hz`,test:()=>Math.abs(Number(valueFor(k))-target)<.001})}
  for(let n of [3,4,5]){let target=Number(profile.terms['P'+n]);rs.push({label:`P${n} 입력 기능`,detail:`In.${64+n} = ${target} (${FN[target]??'미지정'})`,test:()=>Number(valueFor(`In.${64+n}`))===target})}return rs}
-function selectTask(t){monitorOverlay=false;task=t;qs('task1').classList.toggle('active',t===1);qs('task3').classList.toggle('active',t===3);qs('plcDemo').classList.toggle('hidden',t!==3);qs('customSheet').classList.toggle('hidden',mode!=='practice'||selectedExamId!=='custom'||t!==1);qs('terminalHelp').textContent=t===1?'모의 스위치를 누르면 선택 주파수를 LCD와 하단에 즉시 표시합니다. 키패드를 누르면 이전 메뉴로 돌아갑니다.':'3과제의 RS-485 모의 명령을 누르면 LCD에 주파수가 즉시 표시됩니다.';render()}
+function selectTask(t){if(t!==task)markUnsavedWork();monitorOverlay=false;task=t;qs('task1').classList.toggle('active',t===1);qs('task3').classList.toggle('active',t===3);qs('plcDemo').classList.toggle('hidden',t!==3);qs('customSheet').classList.toggle('hidden',mode!=='practice'||selectedExamId!=='custom'||t!==1);qs('terminalHelp').textContent=t===1?'모의 스위치를 누르면 선택 주파수를 LCD와 하단에 즉시 표시합니다. 키패드를 누르면 이전 메뉴로 돌아갑니다.':'3과제의 RS-485 모의 명령을 누르면 LCD에 주파수가 즉시 표시됩니다.';render()}
 function setMode(m){
   if(m===mode)return;
   if(mode==='practice'&&m==='exam'){
@@ -94,21 +104,22 @@ function setMode(m){
     closeResult();
   }
   mode=m;
+  markUnsavedWork();
   qs('practiceBtn').classList.toggle('active',m==='practice');
   qs('examBtn').classList.toggle('active',m==='exam');
   if(m==='exam')qs('practiceProgress').open=false;
   render();toast(m==='practice'?'연습 모드 · 설정값 유지':'시험 모드 · 설정 초기화 완료');
 }
-function loadPreset(type){if(mode==='exam'){toast('연습 모드에서 먼저 문제를 선택하세요.');return}profile=structuredClone(PRESETS[type]);if(type==='exam'){fillCustom(profile)}render();toast(profile.name+' 요구사항 적용')}
+function loadPreset(type){if(mode==='exam'){toast('연습 모드에서 먼저 문제를 선택하세요.');return}profile=structuredClone(PRESETS[type]);if(type==='exam'){fillCustom(profile)}markUnsavedWork();render();toast(profile.name+' 요구사항 적용')}
 function useCustom(){if(mode==='exam'){toast('연습 모드에서 먼저 문제를 설정하세요.');return}if(task===3){toast('사용자 정의 단자배치는 1과제에서 이용하세요.');return}document.querySelector('#customSheet').scrollIntoView({behavior:'smooth',block:'nearest'});toast('P3/P4/P5 및 주파수를 변경한 뒤 아래 적용 버튼을 누르세요.')}
 function fillCustom(p){for(let i of [3,4,5])qs('goalP'+i).value=p.terms['P'+i];for(const [id,k] of [['goalBase','base'],['goalSt1','st1'],['goalSt2','st2'],['goalSt3','st3']])qs(id).value=p[k]??''}
 function applyCustom(){if(mode==='exam'){toast('시험모드에서는 문제를 수정할 수 없습니다.');return}let terms={};for(let i of [3,4,5])terms['P'+i]=Number(qs('goalP'+i).value);let vals=Object.values(terms).filter(x=>x!==0);if(new Set(vals).size!==vals.length){toast('서로 다른 단자에 같은 기능을 동시에 요구할 수 없습니다.');return}
  let freqs={};for(const [id,key] of [['goalBase','base'],['goalSt1','st1'],['goalSt2','st2'],['goalSt3','st3']]){let v=qs(id).value.trim();if(v===''&&key==='base'){freqs[key]=null;continue}let x=Number(v);if(v===''||!Number.isFinite(x)||x<0||x>400){toast('주파수는 0~400 Hz 범위에서 입력하세요. 0속만 빈칸 허용.');return}freqs[key]=x}
- profile={name:'직접 설정 문제',...freqs,terms};selectedExamId='custom';qs('examSelect').value='custom';selectTask(1);render();toast('사용자 지정 요구사항 적용 완료')}
+ markUnsavedWork();profile={name:'직접 설정 문제',...freqs,terms};selectedExamId='custom';qs('examSelect').value='custom';selectTask(1);render();toast('사용자 지정 요구사항 적용 완료')}
 function grade(show){let rs=reqs(),done=rs.filter(x=>x.test());if(!show)return;qs('resultScore').textContent=done.length+' / '+rs.length+' 항목';qs('resultDescription').textContent=`${task}과제 · ${profile.name} · ${done.length===rs.length?'모든 설정 요구사항을 충족했습니다.':'미완료 항목을 확인하고 다시 설정하세요.'}`;qs('resultItems').innerHTML=rs.map(r=>`<div class="resultItem"><span class="${r.test()?'ok':'ng'}">${r.test()?'✓':'✕'}</span><div><strong>${escapeHTML(r.label)}</strong>${mode==='practice'?`<div class="minor">${escapeHTML(r.detail)}</div>`:''}</div></div>`).join('');qs('resultModal').classList.remove('hidden')}
 function closeResult(){qs('resultModal').classList.add('hidden')}
-function toggleTerm(p){terminal[p]=!terminal[p];monitorOverlay=powered;record(`${p} 접점 ${terminal[p]?'ON':'OFF'}`);render()}
-function plcCommand(f,d){if(task!==3)return;if(Number(valueFor('drv'))!==3||Number(valueFor('frq'))!==6){toast(mode==='exam'?'현재 설정에서는 통신 운전 명령을 실행할 수 없습니다.':'통신 운전을 위해 drv=3, Frq=6을 설정해야 합니다.');return}plcFreq=f;dir=d||1;run=f>0;monitorOverlay=true;record(`가상 PLC 통신 · ${f>0?(d===-1?'역회전':'정회전')+' '+f+'Hz':'STOP'}`);render()}
+function toggleTerm(p){markUnsavedWork();terminal[p]=!terminal[p];monitorOverlay=powered;record(`${p} 접점 ${terminal[p]?'ON':'OFF'}`);render()}
+function plcCommand(f,d){if(task!==3)return;if(Number(valueFor('drv'))!==3||Number(valueFor('frq'))!==6){toast(mode==='exam'?'현재 설정에서는 통신 운전 명령을 실행할 수 없습니다.':'통신 운전을 위해 drv=3, Frq=6을 설정해야 합니다.');return}markUnsavedWork();plcFreq=f;dir=d||1;run=f>0;monitorOverlay=true;record(`가상 PLC 통신 · ${f>0?(d===-1?'역회전':'정회전')+' '+f+'Hz':'STOP'}`);render()}
 // 입력 스위치의 '선택 주파수'와 모터가 실제로 출력할 '운전 주파수'를 구분한다.
 // 정지 상태여도 단자를 누르면 어떤 다단속이 선택되는지 LCD와 수치에 보여준다.
 function monitorInfo(){
@@ -165,7 +176,7 @@ function chooseExam(id,quiet=false){
   }
   if(id!=='custom'&&!EXAM_BY_ID[id]){dropdown.value=selectedExamId;return;}
   if(!quiet&&selectedExamId){
-    const okay=window.confirm('다른 문제로 전환할까요?\n현재 인버터 설정과 조작 기록이 초기화됩니다.\n이 작업은 취소할 수 없습니다.');
+    const okay=window.confirm('다른 문제로 전환할까요?\n현재 인버터 설정과 조작 기록이 초기화됩니다.');
     if(!okay){dropdown.value=selectedExamId;return;}
   }
   if(id==='custom'){
@@ -177,7 +188,7 @@ function chooseExam(id,quiet=false){
   }
   dropdown.value=id;
   // Quiet boot has a separate initParams() call; subsequent changes reset here.
-  if(!quiet)resetForNewAttempt();
+  if(!quiet){resetForNewAttempt();markUnsavedWork();}
   render();
   if(!quiet)toast(id==='custom'?'직접 설정 모드로 전환했습니다.':'새 기출문제로 변경했습니다. 인버터는 출하 초기 상태입니다.');
 }
@@ -371,6 +382,8 @@ modeBtn.addEventListener('click',e=>{if(e.detail===0)press('mode')});
 modeBtn.addEventListener('contextmenu',e=>e.preventDefault());
 function keyboardCanControl(){return !['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)&&qs('resultModal').classList.contains('hidden')}
 window.addEventListener('keydown',e=>{
+  // Ctrl/Cmd+R is a browser refresh shortcut, not the simulator's R=RUN key.
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
   if(!keyboardCanControl())return;
   if(e.key.toLowerCase()==='m'){
     e.preventDefault();if(keyboardHeld||e.repeat)return;
@@ -387,5 +400,6 @@ window.addEventListener('keyup',e=>{
   if(!keyboardLong&&keyboardCanControl())press('mode');
 });
 window.addEventListener('blur',()=>{clearTimeout(keyHoldTimer);keyboardHeld=false;clearPointerMode()});
+document.querySelectorAll('#problemEditor input, #problemEditor select').forEach(field=>field.addEventListener('input',markUnsavedWork));
 qs('resultModal').addEventListener('click',e=>{if(e.target.id==='resultModal')closeResult()});
 bootExams();

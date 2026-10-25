@@ -2,12 +2,12 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>G100C · PCQ 3급 인버터 조작 연습 v1.2</title>
+<title>G100C · PCQ 3급 인버터 조작 연습 v1.3</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="app">
-  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.2 · 기출 48회 수록</span></div>
+  <div class="heading"><div><div class="eyebrow">LS ELECTRIC · PCQ 3급 비공식 학습용</div><h1>G100C 인버터 시뮬레이터</h1><p>실제 G100C와 유사한 버튼·표시부를 조작하고, 시험지 형태의 요구사항에 따라 설정해 보세요.</p></div><span class="version">v1.3 · 기출 48회 수록</span></div>
   <div class="controls"><span class="controlLabel">과제</span><div class="pillGroup"><button id="task1" class="active" onclick="selectTask(1)">1과제 · 다단속</button><button id="task3" onclick="selectTask(3)">3과제 · 통신</button></div><span class="controlLabel">채점 모드</span><div class="pillGroup"><button id="practiceBtn" class="active" onclick="setMode('practice')">연습</button><button id="examBtn" onclick="setMode('exam')">시험</button></div><button class="btn" onclick="newSession()">처음 상태로</button><button class="btn primary" onclick="grade(true)">완료 · 결과 확인</button></div>
   <div class="layout">
     <section class="panel devicePanel"><h2>G100C 조작부 <span class="badgeInfo" id="screenState">운전 그룹 · 코드 탐색</span></h2><div class="minor">버튼 조작 중 선택 자릿수 및 저장 확인 단계가 점멸합니다.</div>
@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-        <div class="ext"><button class="btn primary" onclick="press('esc')">↩ 가상 ESC</button><button class="btn subtle" onclick="press('modeRev')">◀ 이전 그룹으로 이동</button><button class="btn" onclick="powerCycle()" id="powerBtn">전원 OFF</button><div class="hintbox"><b>현재 MODE 이동 방향: <span id="groupDirection">정방향 →</span></b><br>MODE/SHIFT <b>짧게</b>: 현재 방향으로 한 그룹 이동 · <b>1초 이상</b>: 이동 방향 반전 후 한 그룹 이동. 이후의 짧은 누르기도 반전된 방향을 유지합니다.<br>값 편집 중 MODE/SHIFT는 자릿수를 왼쪽으로 이동합니다.<br>MODE/SHIFT + ▼ 등의 복합키는 ESC입니다.<br>가상 '이전 그룹' 버튼은 방향을 변경하지 않는 PC 편의 기능입니다.</div></div>
+        <div class="ext"><div class="ext-actions"><button class="btn primary" onclick="press('esc')">↩ 가상 ESC</button><button class="btn" onclick="powerCycle()" id="powerBtn">전원 OFF</button></div><div class="hintbox"><b>현재 MODE 이동 방향: <span id="groupDirection">정방향 →</span></b><br>MODE/SHIFT <b>짧게</b>: 현재 방향으로 한 그룹 이동<br><b>1초 이상</b>: 방향 전환 후 한 그룹 이동 (전환된 방향 유지)<br>값 편집 중에는 자릿수를 왼쪽으로 이동합니다.<br>MODE/SHIFT + ▼ 등은 ESC로 작동합니다.</div></div>
       </div>
       <div class="note" id="lcdNote">기본 운전 주파수 화면입니다. MODE로 그룹을 이동하거나 ▲로 다음 코드를 선택하세요.</div>
       <div class="minor" style="margin-top:9px;line-height:1.6">표시등: SET=설정 중 점멸, RUN=운전 중, FWD/REV=회전 방향. <b>BX 시 네 표시등 점등</b>은 제공된 실물 사진을 기준으로 재현한 특수 표시입니다.</div><div class="sectionSpacer"></div><h2>다기능 입력 모의 동작</h2><div class="minor" id="terminalHelp">모의 스위치를 누르면 선택 주파수를 LCD와 하단에 즉시 표시합니다. 키패드를 누르면 이전 메뉴로 돌아갑니다.</div><div class="switches" id="switches"></div><div class="readout" id="monitor"></div>
